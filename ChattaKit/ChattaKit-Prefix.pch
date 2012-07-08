@@ -1,0 +1,15 @@
+//
+// Prefix header for all source files of the 'ChattaKit' target in the 'ChattaKit' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+    #import "CKConstants.h"
+#endif
+
+// for debug logging
+#ifdef DEBUG
+#define NSDebug(...) do { NSLog(__VA_ARGS__); } while (0)
+#else
+#define NSDebug(...)
+#endif

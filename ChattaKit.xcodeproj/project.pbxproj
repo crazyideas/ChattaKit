@@ -1,0 +1,413 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		277CC444159F659D002B2353 /* ChattaKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 278A8DA2159D62380086C422 /* ChattaKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		278A8D9A159D62380086C422 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 278A8D99159D62380086C422 /* Cocoa.framework */; };
+		278A8DA4159D62380086C422 /* ChattaKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 278A8DA3159D62380086C422 /* ChattaKit.m */; };
+		278A8DB3159D62EB0086C422 /* CKContact.h in Headers */ = {isa = PBXBuildFile; fileRef = 278A8DAD159D62EB0086C422 /* CKContact.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		278A8DB4159D62EB0086C422 /* CKContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 278A8DAE159D62EB0086C422 /* CKContact.m */; };
+		278A8DB5159D62EB0086C422 /* CKContactList.h in Headers */ = {isa = PBXBuildFile; fileRef = 278A8DAF159D62EB0086C422 /* CKContactList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		278A8DB6159D62EB0086C422 /* CKContactList.m in Sources */ = {isa = PBXBuildFile; fileRef = 278A8DB0159D62EB0086C422 /* CKContactList.m */; };
+		278A8DB7159D62EB0086C422 /* CKMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 278A8DB1159D62EB0086C422 /* CKMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		278A8DB8159D62EB0086C422 /* CKMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 278A8DB2159D62EB0086C422 /* CKMessage.m */; };
+		27B7366D159D7274009EC8DD /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = 27B7366B159D7274009EC8DD /* base64.c */; };
+		27B7366E159D7274009EC8DD /* base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 27B7366C159D7274009EC8DD /* base64.h */; };
+		27B73683159D7282009EC8DD /* CKConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 27B7366F159D7281009EC8DD /* CKConstants.h */; };
+		27B73684159D7282009EC8DD /* CKConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B73670159D7281009EC8DD /* CKConstants.m */; };
+		27B73685159D7282009EC8DD /* CKInstantMessageService.h in Headers */ = {isa = PBXBuildFile; fileRef = 27B73671159D7281009EC8DD /* CKInstantMessageService.h */; };
+		27B73686159D7282009EC8DD /* CKInstantMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B73672159D7281009EC8DD /* CKInstantMessageService.m */; };
+		27B7368B159D7282009EC8DD /* CKStanzaLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 27B73677159D7281009EC8DD /* CKStanzaLibrary.h */; };
+		27B7368C159D7282009EC8DD /* CKStanzaLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B73678159D7281009EC8DD /* CKStanzaLibrary.m */; };
+		27B7369D159D759F009EC8DD /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B7369C159D759F009EC8DD /* libxml2.dylib */; };
+		27E3421615A554A30032098A /* NSMutableArray+CKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421215A554A30032098A /* NSMutableArray+CKAdditions.h */; };
+		27E3421715A554A30032098A /* NSMutableArray+CKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421315A554A30032098A /* NSMutableArray+CKAdditions.m */; };
+		27E3421815A554A30032098A /* NSString+CKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421415A554A30032098A /* NSString+CKAdditions.h */; };
+		27E3421915A554A30032098A /* NSString+CKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421515A554A30032098A /* NSString+CKAdditions.m */; };
+		27E3421E15A554B70032098A /* CKTimeService.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421A15A554B70032098A /* CKTimeService.h */; };
+		27E3421F15A554B70032098A /* CKTimeService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421B15A554B70032098A /* CKTimeService.m */; };
+		27E3422015A554B70032098A /* CKTextMessageService.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421C15A554B70032098A /* CKTextMessageService.h */; };
+		27E3422115A554B70032098A /* CKTextMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421D15A554B70032098A /* CKTextMessageService.m */; };
+		27E3422415A554C60032098A /* CKTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3422215A554C60032098A /* CKTimer.h */; };
+		27E3422515A554C60032098A /* CKTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3422315A554C60032098A /* CKTimer.m */; };
+		27E3422A15A554DE0032098A /* CKXMLElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3422615A554DE0032098A /* CKXMLElement.h */; };
+		27E3422B15A554DE0032098A /* CKXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3422715A554DE0032098A /* CKXMLElement.m */; };
+		27E3422C15A554DE0032098A /* CKXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3422815A554DE0032098A /* CKXMLParser.h */; };
+		27E3422D15A554DE0032098A /* CKXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3422915A554DE0032098A /* CKXMLParser.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2746553F159D7114001DFACF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		278A8D96159D62380086C422 /* libChattaKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libChattaKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		278A8D99159D62380086C422 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		278A8D9C159D62380086C422 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		278A8D9D159D62380086C422 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		278A8D9E159D62380086C422 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		278A8DA1159D62380086C422 /* ChattaKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChattaKit-Prefix.pch"; sourceTree = "<group>"; };
+		278A8DA2159D62380086C422 /* ChattaKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChattaKit.h; sourceTree = "<group>"; };
+		278A8DA3159D62380086C422 /* ChattaKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChattaKit.m; sourceTree = "<group>"; };
+		278A8DAD159D62EB0086C422 /* CKContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContact.h; sourceTree = "<group>"; };
+		278A8DAE159D62EB0086C422 /* CKContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContact.m; sourceTree = "<group>"; };
+		278A8DAF159D62EB0086C422 /* CKContactList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactList.h; sourceTree = "<group>"; };
+		278A8DB0159D62EB0086C422 /* CKContactList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactList.m; sourceTree = "<group>"; };
+		278A8DB1159D62EB0086C422 /* CKMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMessage.h; sourceTree = "<group>"; };
+		278A8DB2159D62EB0086C422 /* CKMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMessage.m; sourceTree = "<group>"; };
+		27B7366B159D7274009EC8DD /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
+		27B7366C159D7274009EC8DD /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
+		27B7366F159D7281009EC8DD /* CKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKConstants.h; sourceTree = "<group>"; };
+		27B73670159D7281009EC8DD /* CKConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKConstants.m; sourceTree = "<group>"; };
+		27B73671159D7281009EC8DD /* CKInstantMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKInstantMessageService.h; sourceTree = "<group>"; };
+		27B73672159D7281009EC8DD /* CKInstantMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKInstantMessageService.m; sourceTree = "<group>"; };
+		27B73677159D7281009EC8DD /* CKStanzaLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKStanzaLibrary.h; sourceTree = "<group>"; };
+		27B73678159D7281009EC8DD /* CKStanzaLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKStanzaLibrary.m; sourceTree = "<group>"; };
+		27B7369C159D759F009EC8DD /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		27E3421215A554A30032098A /* NSMutableArray+CKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+CKAdditions.h"; sourceTree = "<group>"; };
+		27E3421315A554A30032098A /* NSMutableArray+CKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+CKAdditions.m"; sourceTree = "<group>"; };
+		27E3421415A554A30032098A /* NSString+CKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CKAdditions.h"; sourceTree = "<group>"; };
+		27E3421515A554A30032098A /* NSString+CKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CKAdditions.m"; sourceTree = "<group>"; };
+		27E3421A15A554B70032098A /* CKTimeService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTimeService.h; sourceTree = "<group>"; };
+		27E3421B15A554B70032098A /* CKTimeService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTimeService.m; sourceTree = "<group>"; };
+		27E3421C15A554B70032098A /* CKTextMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTextMessageService.h; sourceTree = "<group>"; };
+		27E3421D15A554B70032098A /* CKTextMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTextMessageService.m; sourceTree = "<group>"; };
+		27E3422215A554C60032098A /* CKTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTimer.h; sourceTree = "<group>"; };
+		27E3422315A554C60032098A /* CKTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTimer.m; sourceTree = "<group>"; };
+		27E3422615A554DE0032098A /* CKXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKXMLElement.h; sourceTree = "<group>"; };
+		27E3422715A554DE0032098A /* CKXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKXMLElement.m; sourceTree = "<group>"; };
+		27E3422815A554DE0032098A /* CKXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKXMLParser.h; sourceTree = "<group>"; };
+		27E3422915A554DE0032098A /* CKXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKXMLParser.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		278A8D93159D62380086C422 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27B7369D159D759F009EC8DD /* libxml2.dylib in Frameworks */,
+				278A8D9A159D62380086C422 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		277CC457159F78E1002B2353 /* XML */ = {
+			isa = PBXGroup;
+			children = (
+				27E3422615A554DE0032098A /* CKXMLElement.h */,
+				27E3422715A554DE0032098A /* CKXMLElement.m */,
+				27E3422815A554DE0032098A /* CKXMLParser.h */,
+				27E3422915A554DE0032098A /* CKXMLParser.m */,
+			);
+			name = XML;
+			sourceTree = "<group>";
+		};
+		278A8D8B159D62380086C422 = {
+			isa = PBXGroup;
+			children = (
+				27B7369C159D759F009EC8DD /* libxml2.dylib */,
+				278A8D9F159D62380086C422 /* ChattaKit */,
+				278A8D98159D62380086C422 /* Frameworks */,
+				278A8D97159D62380086C422 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		278A8D97159D62380086C422 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				278A8D96159D62380086C422 /* libChattaKit.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		278A8D98159D62380086C422 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				278A8D99159D62380086C422 /* Cocoa.framework */,
+				2746553F159D7114001DFACF /* Foundation.framework */,
+				278A8D9B159D62380086C422 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		278A8D9B159D62380086C422 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				278A8D9C159D62380086C422 /* AppKit.framework */,
+				278A8D9D159D62380086C422 /* CoreData.framework */,
+				278A8D9E159D62380086C422 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		278A8D9F159D62380086C422 /* ChattaKit */ = {
+			isa = PBXGroup;
+			children = (
+				277CC457159F78E1002B2353 /* XML */,
+				27B73697159D72B0009EC8DD /* Categories */,
+				27B73699159D731E009EC8DD /* MessagingServices */,
+				27B73698159D7304009EC8DD /* ChattaCore */,
+				278A8DA0159D62380086C422 /* Supporting Files */,
+			);
+			path = ChattaKit;
+			sourceTree = "<group>";
+		};
+		278A8DA0159D62380086C422 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				278A8DA1159D62380086C422 /* ChattaKit-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		27B73697159D72B0009EC8DD /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				27B7366B159D7274009EC8DD /* base64.c */,
+				27B7366C159D7274009EC8DD /* base64.h */,
+				27E3421215A554A30032098A /* NSMutableArray+CKAdditions.h */,
+				27E3421315A554A30032098A /* NSMutableArray+CKAdditions.m */,
+				27E3421415A554A30032098A /* NSString+CKAdditions.h */,
+				27E3421515A554A30032098A /* NSString+CKAdditions.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		27B73698159D7304009EC8DD /* ChattaCore */ = {
+			isa = PBXGroup;
+			children = (
+				27E3422215A554C60032098A /* CKTimer.h */,
+				27E3422315A554C60032098A /* CKTimer.m */,
+				27B7366F159D7281009EC8DD /* CKConstants.h */,
+				27B73670159D7281009EC8DD /* CKConstants.m */,
+				278A8DAF159D62EB0086C422 /* CKContactList.h */,
+				278A8DB0159D62EB0086C422 /* CKContactList.m */,
+				278A8DAD159D62EB0086C422 /* CKContact.h */,
+				278A8DAE159D62EB0086C422 /* CKContact.m */,
+				278A8DB1159D62EB0086C422 /* CKMessage.h */,
+				278A8DB2159D62EB0086C422 /* CKMessage.m */,
+				278A8DA2159D62380086C422 /* ChattaKit.h */,
+				278A8DA3159D62380086C422 /* ChattaKit.m */,
+			);
+			name = ChattaCore;
+			sourceTree = "<group>";
+		};
+		27B73699159D731E009EC8DD /* MessagingServices */ = {
+			isa = PBXGroup;
+			children = (
+				27E3421C15A554B70032098A /* CKTextMessageService.h */,
+				27E3421D15A554B70032098A /* CKTextMessageService.m */,
+				27B73671159D7281009EC8DD /* CKInstantMessageService.h */,
+				27B73672159D7281009EC8DD /* CKInstantMessageService.m */,
+				27E3421A15A554B70032098A /* CKTimeService.h */,
+				27E3421B15A554B70032098A /* CKTimeService.m */,
+				27B73677159D7281009EC8DD /* CKStanzaLibrary.h */,
+				27B73678159D7281009EC8DD /* CKStanzaLibrary.m */,
+			);
+			name = MessagingServices;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		278A8D94159D62380086C422 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278A8DB3159D62EB0086C422 /* CKContact.h in Headers */,
+				278A8DB5159D62EB0086C422 /* CKContactList.h in Headers */,
+				278A8DB7159D62EB0086C422 /* CKMessage.h in Headers */,
+				27B7366E159D7274009EC8DD /* base64.h in Headers */,
+				27B73683159D7282009EC8DD /* CKConstants.h in Headers */,
+				27B73685159D7282009EC8DD /* CKInstantMessageService.h in Headers */,
+				27B7368B159D7282009EC8DD /* CKStanzaLibrary.h in Headers */,
+				277CC444159F659D002B2353 /* ChattaKit.h in Headers */,
+				27E3421615A554A30032098A /* NSMutableArray+CKAdditions.h in Headers */,
+				27E3421815A554A30032098A /* NSString+CKAdditions.h in Headers */,
+				27E3421E15A554B70032098A /* CKTimeService.h in Headers */,
+				27E3422015A554B70032098A /* CKTextMessageService.h in Headers */,
+				27E3422415A554C60032098A /* CKTimer.h in Headers */,
+				27E3422A15A554DE0032098A /* CKXMLElement.h in Headers */,
+				27E3422C15A554DE0032098A /* CKXMLParser.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		278A8D95159D62380086C422 /* ChattaKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 278A8DA7159D62380086C422 /* Build configuration list for PBXNativeTarget "ChattaKit" */;
+			buildPhases = (
+				278A8D92159D62380086C422 /* Sources */,
+				278A8D93159D62380086C422 /* Frameworks */,
+				278A8D94159D62380086C422 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChattaKit;
+			productName = ChattaKit;
+			productReference = 278A8D96159D62380086C422 /* libChattaKit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		278A8D8D159D62380086C422 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 278A8D90159D62380086C422 /* Build configuration list for PBXProject "ChattaKit" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 278A8D8B159D62380086C422;
+			productRefGroup = 278A8D97159D62380086C422 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				278A8D95159D62380086C422 /* ChattaKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		278A8D92159D62380086C422 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278A8DA4159D62380086C422 /* ChattaKit.m in Sources */,
+				278A8DB4159D62EB0086C422 /* CKContact.m in Sources */,
+				278A8DB6159D62EB0086C422 /* CKContactList.m in Sources */,
+				278A8DB8159D62EB0086C422 /* CKMessage.m in Sources */,
+				27B7366D159D7274009EC8DD /* base64.c in Sources */,
+				27B73684159D7282009EC8DD /* CKConstants.m in Sources */,
+				27B73686159D7282009EC8DD /* CKInstantMessageService.m in Sources */,
+				27B7368C159D7282009EC8DD /* CKStanzaLibrary.m in Sources */,
+				27E3421715A554A30032098A /* NSMutableArray+CKAdditions.m in Sources */,
+				27E3421915A554A30032098A /* NSString+CKAdditions.m in Sources */,
+				27E3421F15A554B70032098A /* CKTimeService.m in Sources */,
+				27E3422115A554B70032098A /* CKTextMessageService.m in Sources */,
+				27E3422515A554C60032098A /* CKTimer.m in Sources */,
+				27E3422B15A554DE0032098A /* CKXMLElement.m in Sources */,
+				27E3422D15A554DE0032098A /* CKXMLParser.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		278A8DA5159D62380086C422 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lxml2";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		278A8DA6159D62380086C422 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = "-lxml2";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		278A8DA8159D62380086C422 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ChattaKit/ChattaKit-Prefix.pch";
+				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		278A8DA9159D62380086C422 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ChattaKit/ChattaKit-Prefix.pch";
+				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		278A8D90159D62380086C422 /* Build configuration list for PBXProject "ChattaKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278A8DA5159D62380086C422 /* Debug */,
+				278A8DA6159D62380086C422 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		278A8DA7159D62380086C422 /* Build configuration list for PBXNativeTarget "ChattaKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278A8DA8159D62380086C422 /* Debug */,
+				278A8DA9159D62380086C422 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 278A8D8D159D62380086C422 /* Project object */;
+}
