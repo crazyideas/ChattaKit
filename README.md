@@ -1,3 +1,3 @@
 ChattaKit
 =========
-ChattaKit Objective-C library that enables Apps to send and receive text and instant messages.
+ChattaKit is an Objective-C library that enables OS X and iOS Apps to send and receive text and instant messages.

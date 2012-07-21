@@ -13,7 +13,7 @@
 - (BOOL)containsString:(NSString *)string;
 - (NSString *)base64EncodedString;
 - (NSString *)base64DecodedString;
-- (NSString *) stringByRemovingWhitespaceNewlineChars;
+- (NSString *)stringByRemovingWhitespaceNewlineChars;
 
 // static methods
 + (NSString *)randomStringWithLength:(NSUInteger)length;

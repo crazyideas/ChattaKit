@@ -26,4 +26,22 @@
     return lastObject;
 }
 
+- (void)pushQueue:(id)object
+{
+    if (object != nil) {
+        [self addObject:object];
+    }
+}
+
+- (id)popQueue
+{
+    if (self.count == 0) return nil;
+    id firstObject = [self objectAtIndex:0];
+    if (firstObject != nil) {
+        [self removeObjectAtIndex:0];
+    }
+    return firstObject;
+}
+
+
 @end
