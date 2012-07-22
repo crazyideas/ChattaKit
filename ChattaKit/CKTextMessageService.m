@@ -104,6 +104,8 @@
             return;
         }
         
+        NSDebug(@"login to text service successful");
+
         // setup time service
         CKTimeService *timeService = [CKTimeService sharedInstance];
         [timeService setServiceTimeZone:self.accountTimezone];
@@ -534,6 +536,8 @@
 - (void)startFetchUnreadMessagesTimer
 {
     timerBlock_t fetchUnreadMessages = ^(void) {
+        NSDebug(@"fetching unread messages");
+
         __weak CKTextMessageService *weak_self = self;
 
         if (weak_self.authorizationToken == nil) {

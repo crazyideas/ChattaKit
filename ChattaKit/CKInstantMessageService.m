@@ -326,7 +326,7 @@
             
             // login successful
             if ([xmlElement.name isEqualToString:@"success"]) {
-                NSDebug(@"login success");
+                NSDebug(@"login to instant service successful");
                 NSData *stanza = [CKStanzaLibrary sessionStreamWithJabberIdentifier:self.username 
                                                                          domain:@"gmail.com"];
                 [self writeRawBytes:stanza toStream:outputStream];
@@ -355,7 +355,6 @@
             NSDebug(@"kStateWaitingForFeaturesBindSession");
             if ([xmlElement elementsForName:@"bind"].count > 0) {
                 self.infoQueryIdentifier = [NSString randomStringWithLength:8];
-                NSDebug(@"sending iq id: %@", self.infoQueryIdentifier);
                 NSData *stanza = [CKStanzaLibrary 
                                   infoQueryBindWithRandomIdentifier:self.infoQueryIdentifier];
                 [self writeRawBytes:stanza toStream:outputStream];
