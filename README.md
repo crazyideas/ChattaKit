@@ -6,8 +6,8 @@ ChattaKit is an Objective-C library that enables OS X and iOS Apps to send and r
 
 * Build Requirements
 
- * Operating System: OS X 10.7 (Lion) or above
- * Development tools: XCode 4.0+ or XCode 4.4 and Command Line Tools
+ * Operating System: OS X 10.8 (Mountain Lion)
+ * Development tools: XCode 4.4 and Command Line Tools
 
 * Dependences
 
