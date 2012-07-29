@@ -262,7 +262,7 @@
 		278A8D8D159D62380086C422 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 278A8D90159D62380086C422 /* Build configuration list for PBXProject "ChattaKit" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -359,6 +359,7 @@
 		278A8DA8159D62380086C422 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ChattaKit/ChattaKit-Prefix.pch";
 				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
@@ -374,6 +375,7 @@
 		278A8DA9159D62380086C422 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ChattaKit/ChattaKit-Prefix.pch";
 				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";

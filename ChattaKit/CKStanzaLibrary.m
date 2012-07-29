@@ -51,9 +51,9 @@
 
 + (NSData *)stopStream
 {
-    NSString *message = [[NSString alloc] initWithString:@"</stream:stream>"];
+    NSString *message = @"</stream:stream>";
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //NSDebug(@"Returning SnitWithString:@"</stream:stream>"]tanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -111,7 +111,7 @@
     NSString *message;
     
     if (from == nil && to == nil) {
-        message= [[NSString alloc] initWithString:@"<presence/>"]; 
+        message= @"<presence/>";
     } else {
         message= [[NSString alloc] initWithFormat:
                   @"<presence type=\'probe\' from=\'%@\' to=\'%@\'/>", from, to];
@@ -150,7 +150,7 @@
 + (NSData *)presenceType:(NSString *)type to:(NSString *)to
 {
     NSString *message = [[NSString alloc] initWithFormat:
-                         @"<presence to=\'%@\' type=\'subscribed\'/>", to, type];
+                         @"<presence to=\'%@\' type=\'%@\'/>", to, type];
     
     //NSDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];

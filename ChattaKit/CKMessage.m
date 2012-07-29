@@ -94,7 +94,7 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat:
-            @"contactName: %@, timestamp: %@, timestampString: %@, messageText: %@, emitted: %@", 
+            @"contactName: %@, timestamp: %@, timestampString: %@, messageText: %@", 
             self.contact.displayName, self.timestamp, self.timestampString, self.text];
 }
  
