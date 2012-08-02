@@ -84,7 +84,7 @@
 {
     if (self = [super init]) {
         self.contact         = [decoder decodeObjectForKey:@"contact"];
-        self.text     = [decoder decodeObjectForKey:@"messageText"];
+        self.text            = [decoder decodeObjectForKey:@"messageText"];
         self.timestampString = [decoder decodeObjectForKey:@"timestampString"];
         self.timestamp       = [decoder decodeObjectForKey:@"timestamp"];
     }

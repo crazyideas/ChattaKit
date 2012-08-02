@@ -94,6 +94,13 @@
     return [onlineArray copy];
 }
 
+- (void)replaceAllContacts:(NSArray *)contacts
+{
+    dispatch_sync(m_serialDispatchQueue, ^(void) {
+        m_contactList = [[NSMutableArray alloc] initWithArray:contacts];
+    });
+}
+
 - (NSUInteger)count
 {
     __block NSUInteger numContacts;
@@ -173,8 +180,12 @@
         return nil;
     }
     
-    dispatch_sync(m_serialDispatchQueue, ^(void) { 
-        foundContact = [m_contactList objectAtIndex:index];
+    dispatch_sync(m_serialDispatchQueue, ^(void) {
+        if (index > m_contactList.count) {
+            foundContact = nil;
+        } else {
+            foundContact = [m_contactList objectAtIndex:index];
+        }
     });
     
     return foundContact;
@@ -194,5 +205,13 @@
     
     return foundContact;
 }
+
+#pragma mark - Debugging
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"Me: %@, Items in Contact List: %li", self.me, [self count]];
+}
+
 
 @end

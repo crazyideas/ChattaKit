@@ -16,6 +16,7 @@
 @synthesize phoneNumber      = _phoneNumber;
 @synthesize connectionState  = _connectionState;
 @synthesize messages         = _messages;
+@synthesize unreadCount      = _unreadCount;
 @synthesize delegate         = _delegate;
 
 - (NSArray *)messages
@@ -85,6 +86,9 @@
 {
     // simply replaces the messages array, does not inform the delegate
     dispatch_sync(m_serialDispatchQueue, ^(void) {
+        if (m_messages == nil) {
+            m_messages = [[NSMutableArray alloc] init];
+        }
         [m_messages removeAllObjects];
         [m_messages addObjectsFromArray:messages];
     });
@@ -118,19 +122,24 @@
 #pragma mark Implementation for NSCoder protocol
 
 -(void) encodeWithCoder:(NSCoder *)coder
-{
+{    
     [coder encodeObject:self.jabberIdentifier forKey:@"jabberIdentifier"];
     [coder encodeObject:self.displayName forKey:@"displayName"];
     [coder encodeObject:self.phoneNumber forKey:@"phoneNumber"];
+    [coder encodeInteger:self.unreadCount forKey:@"unreadCount"];
+    [coder encodeInteger:self.connectionState forKey:@"connectionState"];
     [coder encodeObject:self.messages forKey:@"messages"];
 }
 
 -(id) initWithCoder:(NSCoder *)decoder
 {
     if (self = [super init]) {
+        m_serialDispatchQueue = dispatch_queue_create("contact.serial.queue", NULL);
         self.jabberIdentifier   = [decoder decodeObjectForKey:@"jabberIdentifier"];
         self.displayName        = [decoder decodeObjectForKey:@"displayName"];
         self.phoneNumber        = [decoder decodeObjectForKey:@"phoneNumber"];
+        self.unreadCount        = [decoder decodeIntegerForKey:@"unreadCount"];
+        self.connectionState    = [decoder decodeIntegerForKey:@"connectionState"];
         [self replaceMessagesWith:[decoder decodeObjectForKey:@"messages"]];
     }
     return self;

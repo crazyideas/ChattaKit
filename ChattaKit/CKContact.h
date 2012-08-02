@@ -28,13 +28,15 @@ typedef enum {
     dispatch_queue_t m_serialDispatchQueue;
 }
 
-@property (nonatomic, strong) NSString *jabberIdentifier;
-@property (nonatomic, strong) NSString *displayName;
-@property (nonatomic, strong) NSString *phoneNumber;
-@property (nonatomic) ContactConnectionState connectionState;
+@property (atomic, strong) NSString *jabberIdentifier;
+@property (atomic, strong) NSString *displayName;
+@property (atomic, strong) NSString *phoneNumber;
+@property (atomic) NSUInteger unreadCount;
+@property (atomic) ContactConnectionState connectionState;
+@property (strong, nonatomic, readonly) NSArray  *messages;
+
 @property (nonatomic, assign) id <CKContactDelegate> delegate;
 
-@property (strong, nonatomic, readonly) NSArray  *messages;
 
 - (CKContact *)init;
 - (CKContact *)initWithJabberIdentifier:(NSString *)jid

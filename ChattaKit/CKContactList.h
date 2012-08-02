@@ -35,6 +35,7 @@
 
 - (NSArray *)allContacts;
 - (NSArray *)allOnlineContacts;
+- (void)replaceAllContacts:(NSArray *)contacts;
 
 - (NSUInteger)count;
 
