@@ -457,12 +457,17 @@
                     NSDebug(@"received message: %@; from: %@", bodyElement.content, contactJabberIdentifier);
                     
                     CKContact *contact = [[CKContactList sharedInstance] contactWithJabberIdentifier:contactJabberIdentifier];
-                    if (contact != nil) {
-                        CKMessage *message = [[CKMessage alloc] initWithContact:contact 
-                                                                  timestamp:[NSDate date] 
-                                                                messageText:bodyElement.content];
-                        [[CKContactList sharedInstance] newMessage:message forContact:contact];
+                    if (contact == nil) {
+                        contact = [[CKContact alloc] initWithJabberIdentifier:contactJabberIdentifier
+                                                               andDisplayName:contactJabberIdentifier
+                                                               andPhoneNumber:nil
+                                                              andContactState:kContactOnline];
+                        [[CKContactList sharedInstance] addContact:contact];
                     }
+                    CKMessage *message = [[CKMessage alloc] initWithContact:contact
+                        timestamp:[NSDate date] messageText:bodyElement.content];
+                    [[CKContactList sharedInstance] newMessage:message forContact:contact];
+                   
                     break;
                 }
                 default:

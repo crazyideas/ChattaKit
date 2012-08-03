@@ -203,7 +203,15 @@
         return nil;
     }
     
-    return [[CKContactList sharedInstance] contactWithPhoneNumber:contactPhoneNumber];
+    CKContact *contact = [[CKContactList sharedInstance] contactWithPhoneNumber:contactPhoneNumber];
+    if (contact == nil) {
+        contact = [[CKContact alloc] initWithJabberIdentifier:nil
+                                               andDisplayName:contactPhoneNumber
+                                               andPhoneNumber:contactPhoneNumber
+                                              andContactState:kContactOffline];
+        [[CKContactList sharedInstance] addContact:contact];
+    }
+    return contact;
 }
 
 - (NSDate *)anchorForThread:(NSString *)threadId jsonLookup:(NSDictionary *)jsonDictionary
