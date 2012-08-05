@@ -9,18 +9,11 @@
 
 @class CKMessage;
 
-@protocol CKContactDelegate <NSObject>
-@optional
-- (void)newMessage:(CKMessage *)message;
-@end
-
 typedef enum {
     kContactOnline,
     kContactOffline,
     kContactIndeterminate
 } ContactConnectionState;
-
-
 
 @interface CKContact : NSObject <NSCoding>
 {
@@ -34,9 +27,6 @@ typedef enum {
 @property (atomic) NSUInteger unreadCount;
 @property (atomic) ContactConnectionState connectionState;
 @property (strong, nonatomic, readonly) NSArray  *messages;
-
-@property (nonatomic, assign) id <CKContactDelegate> delegate;
-
 
 - (CKContact *)init;
 - (CKContact *)initWithJabberIdentifier:(NSString *)jid

@@ -17,7 +17,6 @@
 @synthesize connectionState  = _connectionState;
 @synthesize messages         = _messages;
 @synthesize unreadCount      = _unreadCount;
-@synthesize delegate         = _delegate;
 
 - (NSArray *)messages
 {
@@ -76,15 +75,10 @@
     dispatch_sync(m_serialDispatchQueue, ^(void) {
         [m_messages addObject:message];
     });
-    
-    if (self.delegate != nil) {
-        [self.delegate newMessage:message];
-    }
 }
 
 - (void)replaceMessagesWith:(NSArray *)messages
 {
-    // simply replaces the messages array, does not inform the delegate
     dispatch_sync(m_serialDispatchQueue, ^(void) {
         if (m_messages == nil) {
             m_messages = [[NSMutableArray alloc] init];

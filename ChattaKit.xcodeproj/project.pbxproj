@@ -29,9 +29,9 @@
 		27B7368B159D7282009EC8DD /* CKStanzaLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 27B73677159D7281009EC8DD /* CKStanzaLibrary.h */; };
 		27B7368C159D7282009EC8DD /* CKStanzaLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B73678159D7281009EC8DD /* CKStanzaLibrary.m */; };
 		27B7369D159D759F009EC8DD /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B7369C159D759F009EC8DD /* libxml2.dylib */; };
-		27E3421615A554A30032098A /* NSMutableArray+CKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421215A554A30032098A /* NSMutableArray+CKAdditions.h */; };
+		27E3421615A554A30032098A /* NSMutableArray+CKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421215A554A30032098A /* NSMutableArray+CKAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		27E3421715A554A30032098A /* NSMutableArray+CKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421315A554A30032098A /* NSMutableArray+CKAdditions.m */; };
-		27E3421815A554A30032098A /* NSString+CKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421415A554A30032098A /* NSString+CKAdditions.h */; };
+		27E3421815A554A30032098A /* NSString+CKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421415A554A30032098A /* NSString+CKAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		27E3421915A554A30032098A /* NSString+CKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421515A554A30032098A /* NSString+CKAdditions.m */; };
 		27E3421E15A554B70032098A /* CKTimeService.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421A15A554B70032098A /* CKTimeService.h */; };
 		27E3421F15A554B70032098A /* CKTimeService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421B15A554B70032098A /* CKTimeService.m */; };

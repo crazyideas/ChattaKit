@@ -191,6 +191,27 @@
     return foundContact;
 }
 
+- (NSInteger)indexOfContact:(CKContact *)contact
+{
+    __block NSInteger contactIndex = -1;
+
+    if (contact == nil) {
+        return contactIndex;
+    }
+    
+    dispatch_sync(m_serialDispatchQueue, ^(void) {
+        [[self allContacts] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            CKContact *blkContact = obj;
+            if ([blkContact isEqualToContact:contact]) {
+                contactIndex = idx;
+                *stop = YES;
+            }
+        }];
+    });
+    
+    return contactIndex;
+}
+
 - (BOOL)containsContact:(CKContact *)contact
 {
     __block BOOL foundContact;

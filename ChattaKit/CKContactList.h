@@ -43,6 +43,7 @@
 - (CKContact *)contactWithJabberIdentifier:(NSString *)jid;
 - (CKContact *)contactWithPhoneNumber:(NSString *)phoneNumber;
 - (CKContact *)contactWithIndex:(NSInteger)index;
+- (NSInteger)indexOfContact:(CKContact *)contact;
 
 - (BOOL)containsContact:(CKContact *)contact;
 
