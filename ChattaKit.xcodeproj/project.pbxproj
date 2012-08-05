@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2764FB7015CDB914000679D4 /* CKRoster.h in Headers */ = {isa = PBXBuildFile; fileRef = 2764FB6E15CDB914000679D4 /* CKRoster.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2764FB7115CDB914000679D4 /* CKRoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 2764FB6F15CDB914000679D4 /* CKRoster.m */; };
+		2764FB7615CDB931000679D4 /* CKRosterItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2764FB7415CDB931000679D4 /* CKRosterItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2764FB7715CDB931000679D4 /* CKRosterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2764FB7515CDB931000679D4 /* CKRosterItem.m */; };
 		277CC444159F659D002B2353 /* ChattaKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 278A8DA2159D62380086C422 /* ChattaKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		278A8D9A159D62380086C422 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 278A8D99159D62380086C422 /* Cocoa.framework */; };
 		278A8DA4159D62380086C422 /* ChattaKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 278A8DA3159D62380086C422 /* ChattaKit.m */; };
@@ -43,6 +47,10 @@
 
 /* Begin PBXFileReference section */
 		2746553F159D7114001DFACF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2764FB6E15CDB914000679D4 /* CKRoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRoster.h; sourceTree = "<group>"; };
+		2764FB6F15CDB914000679D4 /* CKRoster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKRoster.m; sourceTree = "<group>"; };
+		2764FB7415CDB931000679D4 /* CKRosterItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRosterItem.h; sourceTree = "<group>"; };
+		2764FB7515CDB931000679D4 /* CKRosterItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKRosterItem.m; sourceTree = "<group>"; };
 		278A8D96159D62380086C422 /* libChattaKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libChattaKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		278A8D99159D62380086C422 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		278A8D9C159D62380086C422 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -95,6 +103,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2764FB7315CDB920000679D4 /* XMPP */ = {
+			isa = PBXGroup;
+			children = (
+				2764FB6E15CDB914000679D4 /* CKRoster.h */,
+				2764FB6F15CDB914000679D4 /* CKRoster.m */,
+				2764FB7415CDB931000679D4 /* CKRosterItem.h */,
+				2764FB7515CDB931000679D4 /* CKRosterItem.m */,
+			);
+			name = XMPP;
+			sourceTree = "<group>";
+		};
 		277CC457159F78E1002B2353 /* XML */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +222,7 @@
 				27E3421D15A554B70032098A /* CKTextMessageService.m */,
 				27B73671159D7281009EC8DD /* CKInstantMessageService.h */,
 				27B73672159D7281009EC8DD /* CKInstantMessageService.m */,
+				2764FB7315CDB920000679D4 /* XMPP */,
 				27E3421A15A554B70032098A /* CKTimeService.h */,
 				27E3421B15A554B70032098A /* CKTimeService.m */,
 				27B73677159D7281009EC8DD /* CKStanzaLibrary.h */,
@@ -233,6 +253,8 @@
 				27E3422415A554C60032098A /* CKTimer.h in Headers */,
 				27E3422A15A554DE0032098A /* CKXMLElement.h in Headers */,
 				27E3422C15A554DE0032098A /* CKXMLParser.h in Headers */,
+				2764FB7015CDB914000679D4 /* CKRoster.h in Headers */,
+				2764FB7615CDB931000679D4 /* CKRosterItem.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +323,8 @@
 				27E3422515A554C60032098A /* CKTimer.m in Sources */,
 				27E3422B15A554DE0032098A /* CKXMLElement.m in Sources */,
 				27E3422D15A554DE0032098A /* CKXMLParser.m in Sources */,
+				2764FB7115CDB914000679D4 /* CKRoster.m in Sources */,
+				2764FB7715CDB931000679D4 /* CKRosterItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

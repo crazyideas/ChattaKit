@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "CKContact.h"
+#import "CKRoster.h"
+#import "CKRosterItem.h"
 #import "ChattaKit.h"
 
 @interface CKInstantMessageService : NSObject <NSStreamDelegate, NSXMLParserDelegate>
@@ -28,17 +30,17 @@
     NSTimer *serverPingTimer;
 }
 
-// properties
 @property (strong, nonatomic) ChattaKit *chattaKit;
 @property (strong, nonatomic) NSString *username;
 @property (strong, nonatomic) NSString *password;
 @property (strong, nonatomic) NSString *fullJabberIdentifier;
 @property (strong, nonatomic) NSString *infoQueryIdentifier;
 @property (strong, nonatomic) NSString *streamNamespace;
-@property (nonatomic) BOOL signedIn;
+@property (strong, nonatomic) CKRoster *onlineRoster;
 @property (nonatomic) ServiceStreamState streamState;
+@property (nonatomic) BOOL signedIn;
 
-// methods
+
 - (id)init;
 
 - (void)loginToServiceWithUsername:(NSString *)username password:(NSString *)password;

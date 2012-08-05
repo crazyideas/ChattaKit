@@ -37,6 +37,8 @@
         receivedElement = [[NSMutableString alloc] init];
         currentElement = kInvalidElementType;
         processingElement = NO;
+        
+        self.onlineRoster = [[CKRoster alloc] init];
     }
     
     return self;
@@ -228,10 +230,19 @@
 
 - (void)sendPresenceProbeTo:(CKContact *)contact
 {
-    NSData *stanza = [CKStanzaLibrary presenceProbeFrom:self.fullJabberIdentifier 
-                                                     to:contact.jabberIdentifier];
+    CKRosterItem *rosterItem = [self.onlineRoster
+        rosterItemForBareJabberIdentifier:contact.jabberIdentifier];
+    if (rosterItem == nil) {
+        [contact updateConnectionState:kContactOffline];
+        return;
+    }
+    [contact updateConnectionState:kContactOnline];
     
+    /* fix corner case of resource having space before using if using presence probes
+    NSData *stanza = [CKStanzaLibrary presenceProbeFrom:self.fullJabberIdentifier
+        to:rosterItem.fullJabberIdentifier];
     [self writeRawBytes:stanza toStream:outputStream];
+    */
 }
 
 // selector for server ping keep alive
@@ -376,8 +387,9 @@
             self.fullJabberIdentifier = jidtag.content;
             
             // send iq request for roster and presence to indicate we're online
-            NSData *stanza = [CKStanzaLibrary infoQueryRequestRosterAndPresenceWithJabberIdentifier:self.fullJabberIdentifier 
-                                                                                     andIdentifier:self.infoQueryIdentifier];
+            NSData *stanza = [CKStanzaLibrary
+                infoQueryRequestRosterAndPresenceWithJabberIdentifier:self.fullJabberIdentifier
+                andIdentifier:self.infoQueryIdentifier];
             [self writeRawBytes:stanza toStream:outputStream];
             self.streamState = kStateConnected;
             self.signedIn = YES;
@@ -402,27 +414,36 @@
                         }
                     } */
                     
-                    if ([[query.xmlns lastObject] isEqualToString:@"xmlns='http://jabber.org/protocol/disco#info'"]) {
+                    if ([[query.xmlns lastObject]
+                            isEqualToString:@"xmlns='http://jabber.org/protocol/disco#info'"]) {
                         NSString *from = [xmlElement.attributes objectForKey:@"from"];
                         NSString *bareFrom = [[from componentsSeparatedByString:@"/"] objectAtIndex:0];
                         
                         // send iq request for roster and presence to indicate we're online
-                        NSData *stanza = [CKStanzaLibrary infoQueryDiscoveryInfoResponseFrom:self.fullJabberIdentifier 
-                                                                                      andTo:bareFrom];
+                        NSData *stanza = [CKStanzaLibrary
+                            infoQueryDiscoveryInfoResponseFrom:self.fullJabberIdentifier andTo:bareFrom];
                         [self writeRawBytes:stanza toStream:outputStream];
                     }
                     break;
                 }
                 case kStanzaPresence:
                 {
-                    // get contact name
-                    NSString *contactJabberIdentifier = [xmlElement.attributes objectForKey:@"from"];
-                    contactJabberIdentifier = [[contactJabberIdentifier componentsSeparatedByString:@"/"] objectAtIndex:0];
-                    CKContact *contact = [[CKContactList sharedInstance] contactWithJabberIdentifier:contactJabberIdentifier];
+                    NSString *contactFullJid = [xmlElement.attributes objectForKey:@"from"];
+                    NSString *contactBareJid =
+                        [[contactFullJid componentsSeparatedByString:@"/"] objectAtIndex:0];
+                    CKContact *contact =
+                        [[CKContactList sharedInstance] contactWithJabberIdentifier:contactBareJid];
                     
                     // contact signed off
                     if ([[xmlElement.attributes objectForKey:@"type"] isEqualToString:@"unavailable"]) {
-                        //NSDebug(@"contact: %@, signed off", contactJabberIdentifier);
+                        // remove from roster
+                        CKRosterItem *rosterItem =
+                            [self.onlineRoster rosterItemForFullJabberIdentifier:contactFullJid];
+                        if (rosterItem != nil) {
+                            [self.onlineRoster removeRosterItem:rosterItem];
+                        }
+                  
+                        // update chatta
                         [contact updateConnectionState:kContactOffline];
                     }
                     // contact requested to add you to their buddy list
@@ -431,18 +452,29 @@
                     }
                     // contact signed on
                     else {
-                        //NSDebug(@"contact: %@, signed on", contactJabberIdentifier);
+                        // add to roster
+                        CKRosterItem *rosterItem =
+                            [self.onlineRoster rosterItemForFullJabberIdentifier:contactFullJid];
+                        if (rosterItem == nil) {
+                            rosterItem = [[CKRosterItem alloc] init];
+                            rosterItem.fullJabberIdentifier = contactFullJid;
+                        }
+                        [self.onlineRoster addRosterItem:rosterItem];
+
+                        // update chatta
                         [contact updateConnectionState:kContactOnline];
                     }
-                    
+
                     break;
                 }
                 case kStanzaMessage:
                 {
-                    // get contact name
-                    NSString *contactJabberIdentifier = [xmlElement.attributes objectForKey:@"from"];
-                    contactJabberIdentifier = [[contactJabberIdentifier componentsSeparatedByString:@"/"] objectAtIndex:0];
-                    
+                    NSString *contactFullJid = [xmlElement.attributes objectForKey:@"from"];
+                    NSString *contactBareJid =
+                        [[contactFullJid componentsSeparatedByString:@"/"] objectAtIndex:0];
+                    CKContact *contact =
+                        [[CKContactList sharedInstance] contactWithJabberIdentifier:contactBareJid];
+
                     // if we don't have a body element, we are not interested
                     // this is usually things like indicating the other user 
                     // is typing 
@@ -454,12 +486,11 @@
                     // extract body
                     CKXMLElement *bodyElement = [bodyElements objectAtIndex:0];
                     
-                    NSDebug(@"received message: %@; from: %@", bodyElement.content, contactJabberIdentifier);
+                    NSDebug(@"received message: %@; from: %@", bodyElement.content, contactBareJid);
                     
-                    CKContact *contact = [[CKContactList sharedInstance] contactWithJabberIdentifier:contactJabberIdentifier];
                     if (contact == nil) {
-                        contact = [[CKContact alloc] initWithJabberIdentifier:contactJabberIdentifier
-                                                               andDisplayName:contactJabberIdentifier
+                        contact = [[CKContact alloc] initWithJabberIdentifier:contactBareJid
+                                                               andDisplayName:contactBareJid
                                                                andPhoneNumber:nil
                                                               andContactState:kContactOnline];
                         [[CKContactList sharedInstance] addContact:contact];

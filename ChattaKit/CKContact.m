@@ -135,11 +135,11 @@
 {
     if (self = [super init]) {
         m_serialDispatchQueue = dispatch_queue_create("contact.serial.queue", NULL);
-        self.jabberIdentifier   = [decoder decodeObjectForKey:@"jabberIdentifier"];
-        self.displayName        = [decoder decodeObjectForKey:@"displayName"];
-        self.phoneNumber        = [decoder decodeObjectForKey:@"phoneNumber"];
-        self.unreadCount        = [decoder decodeIntegerForKey:@"unreadCount"];
-        self.connectionState    = [decoder decodeIntegerForKey:@"connectionState"];
+        self.jabberIdentifier     = [decoder decodeObjectForKey:@"jabberIdentifier"];
+        self.displayName          = [decoder decodeObjectForKey:@"displayName"];
+        self.phoneNumber          = [decoder decodeObjectForKey:@"phoneNumber"];
+        self.unreadCount          = [decoder decodeIntegerForKey:@"unreadCount"];
+        self.connectionState      = [decoder decodeIntegerForKey:@"connectionState"];
         [self replaceMessagesWith:[decoder decodeObjectForKey:@"messages"]];
     }
     return self;
