@@ -64,10 +64,20 @@
         self.phoneNumber = phoneNumber;
         self.connectionState = contactState;
         m_messages = [[NSMutableArray alloc] init];
-        m_serialDispatchQueue = dispatch_queue_create("contact.serial.queue", NULL);
+        if (m_serialDispatchQueue == nil) {
+            m_serialDispatchQueue = dispatch_queue_create("contact.serial.queue", NULL);
+        }
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    m_messages = nil;
+    if (m_serialDispatchQueue) {
+        dispatch_release(m_serialDispatchQueue);
+    }
 }
 
 - (void)addMessage:(CKMessage *)message

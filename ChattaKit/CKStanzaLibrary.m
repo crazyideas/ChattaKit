@@ -187,6 +187,7 @@
         return [s copy];
     }
     
+    // weird char that causes libxml2 to crash
     if ([s containsString:@"’"]) {
         return [xmlstring stringByReplacingOccurrencesOfString:@"’" withString:@""];
     }
