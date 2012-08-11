@@ -9,7 +9,7 @@
 
 // for debug logging
 #ifdef DEBUG
-#define NSDebug(...) do { NSLog(__VA_ARGS__); } while (0)
+#define CKDebug(...) do { NSLog(__VA_ARGS__); } while (0)
 #else
-#define NSDebug(...)
+#define CKDebug(...)
 #endif

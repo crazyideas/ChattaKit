@@ -11,12 +11,20 @@
 
 @implementation CKContact
 
-@synthesize jabberIdentifier = _jabberIdentifier;
-@synthesize displayName      = _displayName;
-@synthesize phoneNumber      = _phoneNumber;
-@synthesize connectionState  = _connectionState;
-@synthesize messages         = _messages;
-@synthesize unreadCount      = _unreadCount;
+- (void)setConnectionState:(ContactState)connectionState
+{
+    dispatch_sync(m_serialDispatchQueue, ^(void) {
+        // update the contact list delegate that a contacts connection state
+        // has been updated
+        CKContactList *contactList = [CKContactList sharedInstance];
+        if (contactList.delegate != nil) {
+            [contactList.delegate contactConnectionStateUpdated:connectionState
+                                                     forContact:self];
+        }
+        
+        _connectionState = connectionState;
+    });
+}
 
 - (NSArray *)messages
 {
@@ -38,7 +46,7 @@
     return [self initWithJabberIdentifier:nil 
                            andDisplayName:nil 
                            andPhoneNumber:nil 
-                          andContactState:kContactIndeterminate];
+                          andContactState:ContactStateIndeterminate];
 }
 
 - (CKContact *)initWithJabberIdentifier:(NSString *)jid 
@@ -48,13 +56,13 @@
     return [self initWithJabberIdentifier:jid 
                            andDisplayName:displayName 
                            andPhoneNumber:phoneNumber 
-                          andContactState:kContactIndeterminate];
+                          andContactState:ContactStateIndeterminate];
 }
 
 - (CKContact *)initWithJabberIdentifier:(NSString *)jid 
                        andDisplayName:(NSString *)displayName 
                        andPhoneNumber:(NSString *)phoneNumber
-                      andContactState:(ContactConnectionState)contactState
+                      andContactState:(ContactState)contactState
 {
     self = [super init];
     
@@ -62,11 +70,11 @@
         self.jabberIdentifier = jid;
         self.displayName = displayName;
         self.phoneNumber = phoneNumber;
-        self.connectionState = contactState;
         m_messages = [[NSMutableArray alloc] init];
         if (m_serialDispatchQueue == nil) {
             m_serialDispatchQueue = dispatch_queue_create("contact.serial.queue", NULL);
         }
+        self.connectionState = contactState;
     }
     
     return self;
@@ -98,17 +106,7 @@
     });
 }
 
-- (void)updateConnectionState:(ContactConnectionState)connectionState
-{
-    self.connectionState = connectionState;
-    
-    // update the contact list delegate that a contacts connection state has been updated
-    CKContactList *contactList = [CKContactList sharedInstance];
-    if (contactList.delegate != nil) {
-        [contactList.delegate contactConnectionStateUpdated:connectionState 
-                                                 forContact:self];
-    }
-}
+
 
 - (BOOL)isEqualToContact:(CKContact *)object
 {
@@ -131,7 +129,6 @@
     [coder encodeObject:self.displayName forKey:@"displayName"];
     [coder encodeObject:self.phoneNumber forKey:@"phoneNumber"];
     [coder encodeInteger:self.unreadCount forKey:@"unreadCount"];
-    [coder encodeInteger:self.connectionState forKey:@"connectionState"];
     [coder encodeObject:self.messages forKey:@"messages"];
 }
 
@@ -143,7 +140,7 @@
         self.displayName          = [decoder decodeObjectForKey:@"displayName"];
         self.phoneNumber          = [decoder decodeObjectForKey:@"phoneNumber"];
         self.unreadCount          = [decoder decodeIntegerForKey:@"unreadCount"];
-        self.connectionState      = [decoder decodeIntegerForKey:@"connectionState"];
+        self.connectionState      = ContactStateIndeterminate;
         [self replaceMessagesWith:[decoder decodeObjectForKey:@"messages"]];
     }
     return self;
@@ -151,8 +148,9 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"jid: %@, displayName: %@, phoneNumber: %@, messages: %zu", 
-            self.jabberIdentifier, self.displayName, self.phoneNumber, self.messages.count];
+    return [NSString stringWithFormat:@"displayName: %@, jid: %@, phoneNumber: %@, messages: %zu, "
+            "unread messages: %zu, connectionState: %i", self.displayName, self.jabberIdentifier,
+            self.phoneNumber, self.messages.count, self.unreadCount, self.connectionState];
 }
 
 @end

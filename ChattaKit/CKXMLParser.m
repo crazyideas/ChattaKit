@@ -65,7 +65,7 @@
     
     xpathCtx = xmlXPathNewContext((xmlDocPtr)rootNode);
     if(xpathCtx == NULL) {
-        NSDebug(@"unable to create xpath context");
+        CKDebug(@"[-] unable to create xpath context");
         return nil;
     }
     
@@ -73,7 +73,7 @@
     
     xpathObj = xmlXPathEvalExpression((xmlChar *)xpathExpr, xpathCtx);
     if(xpathObj == NULL) {
-        NSDebug(@"unable to evaluate xpath expression");
+        CKDebug(@"[-] unable to evaluate xpath expression");
         return nil;
     }
     

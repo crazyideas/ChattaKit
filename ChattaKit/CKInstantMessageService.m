@@ -66,19 +66,19 @@
 
 - (void)stream:(NSStream *)stream handleEvent:(NSStreamEvent)eventCode
 {
-    //NSDebug(@"eventCode: %lu", eventCode);
+    //CKDebug(@"eventCode: %lu", eventCode);
     switch (eventCode) {
         case NSStreamEventErrorOccurred:
         {
-            NSDebug(@"NSStreamEventErrorOccurred Occured.");
-            NSDebug(@"Stopping Stream Processor");
+            CKDebug(@"[-] NSStreamEventErrorOccurred Occured.");
+            CKDebug(@"[-] Stopping Stream Processor");
             [self logoutOfService];
             break;
         }
         case NSStreamEventEndEncountered:
         {
-            NSDebug(@"NSStreamEventEndEncountered Occured.");
-            NSDebug(@"Stopping Stream Processor");
+            CKDebug(@"[-] NSStreamEventEndEncountered Occured.");
+            CKDebug(@"[-] Stopping Stream Processor");
             [self logoutOfService];
             break;
         }
@@ -233,10 +233,10 @@
     CKRosterItem *rosterItem = [self.onlineRoster
         rosterItemForBareJabberIdentifier:contact.jabberIdentifier];
     if (rosterItem == nil) {
-        [contact updateConnectionState:kContactOffline];
+        contact.connectionState = ContactStateOffline;
         return;
     }
-    [contact updateConnectionState:kContactOnline];
+    contact.connectionState = ContactStateOnline;
     
     /* fix corner case of resource having space before using if using presence probes
     NSData *stanza = [CKStanzaLibrary presenceProbeFrom:self.fullJabberIdentifier
@@ -260,7 +260,7 @@
 
 - (void)processElement:(NSString *)element andElementType:(XMLElementType)elementType
 {    
-    //NSDebug(@"processElement: %@", element);
+    //CKDebug(@"processElement: %@", element);
     // if we are processing stream events after the first one, make
     // sure to add the namespace back in, this will quiet libxml2 
     // and allow us to not keep too much state in memory
@@ -300,15 +300,12 @@
     switch (self.streamState) {
         case kStateWaitingForStream:
         {
-            NSDebug(@"kStreamStateInitiatingStream");
             self.streamNamespace = [xmlElement xmlnsWithPrefix:@"stream"];
             self.streamState = kStateWaitingForFeatures;
             break;
         }
         case kStateWaitingForFeatures:
-        {
-            NSDebug(@"kStreamStateStreamReceived");
-            
+        {            
             // check if the server supports the PLAIN authentication mechanism  
             BOOL containsPLAIN = NO;
             NSArray *mechanisms = [[[xmlElement elementsForName:@"mechanisms"] lastObject] 
@@ -332,12 +329,10 @@
             break;
         }
         case kStateWaitingForAuth:
-        {
-            NSDebug(@"kStateWaitingForAuth");
-            
+        {            
             // login successful
             if ([xmlElement.name isEqualToString:@"success"]) {
-                NSDebug(@"login to instant service successful");
+                CKDebug(@"[+] login to instant service successful");
                 NSData *stanza = [CKStanzaLibrary sessionStreamWithJabberIdentifier:self.username 
                                                                          domain:@"gmail.com"];
                 [self writeRawBytes:stanza toStream:outputStream];
@@ -345,7 +340,7 @@
             }
             // failure
             else {
-                NSDebug(@"login failure");
+                CKDebug(@"[-] login failure");
                 [self logoutOfService];
             }
             
@@ -353,7 +348,6 @@
         }
         case kStateWaitingForSessionStream:
         {
-            NSDebug(@"kStateWaitingForSessionStream");
             if ([xmlElement.name isEqualToString:@"stream"]) {
                 self.streamState = kStateWaitingForFeaturesBindSession;
             } else {
@@ -363,7 +357,6 @@
         }
         case kStateWaitingForFeaturesBindSession:
         {
-            NSDebug(@"kStateWaitingForFeaturesBindSession");
             if ([xmlElement elementsForName:@"bind"].count > 0) {
                 self.infoQueryIdentifier = [NSString randomStringWithLength:8];
                 NSData *stanza = [CKStanzaLibrary 
@@ -377,7 +370,6 @@
         }
         case kStateWaitingForInfoQueryBind:
         {
-            NSDebug(@"kStateWaitingForInfoQueryBind");
             if ([xmlElement containsElementsWithName:@"error"]) {
                 [self logoutOfService];
             }
@@ -394,7 +386,8 @@
             self.streamState = kStateConnected;
             self.signedIn = YES;
             [self.chattaKit connectionNotificationFrom:self withState:YES];
-            NSDebug(@"kStateConnected");
+            
+            CKDebug(@"[+] connection to instant service established");
             break;
         }
         case kStateConnected:
@@ -410,7 +403,7 @@
                     /* NSString *queryNamespace = [query.xmlns objectAtIndex:0];
                     if ([queryNamespace isEqualToString:@"xmlns=\'jabber:iq:roster\'"]) {
                         for (XMLElement *item in query.elements) {
-                            NSDebug(@"roster item: %@", [item.attributes objectForKey:@"jid"]);
+                            CKDebug(@"roster item: %@", [item.attributes objectForKey:@"jid"]);
                         }
                     } */
                     
@@ -444,11 +437,11 @@
                         }
                   
                         // update chatta
-                        [contact updateConnectionState:kContactOffline];
+                        contact.connectionState = ContactStateOffline;
                     }
                     // contact requested to add you to their buddy list
                     else if ([[xmlElement.attributes objectForKey:@"type"] isEqualToString:@"subscribe"]) {
-                        //NSDebug(@"contact: %@, friend request", contactJabberIdentifier);
+                        //CKDebug(@"contact: %@, friend request", contactJabberIdentifier);
                     }
                     // contact signed on
                     else {
@@ -462,7 +455,7 @@
                         [self.onlineRoster addRosterItem:rosterItem];
 
                         // update chatta
-                        [contact updateConnectionState:kContactOnline];
+                        contact.connectionState = ContactStateOnline;
                     }
 
                     break;
@@ -486,13 +479,13 @@
                     // extract body
                     CKXMLElement *bodyElement = [bodyElements objectAtIndex:0];
                     
-                    NSDebug(@"received message: %@; from: %@", bodyElement.content, contactBareJid);
+                    CKDebug(@"[+] received message: %@; from: %@", bodyElement.content, contactBareJid);
                     
                     if (contact == nil) {
                         contact = [[CKContact alloc] initWithJabberIdentifier:contactBareJid
                                                                andDisplayName:contactBareJid
                                                                andPhoneNumber:nil
-                                                              andContactState:kContactOnline];
+                                                              andContactState:ContactStateOnline];
                         [[CKContactList sharedInstance] addContact:contact];
                     }
                     CKMessage *message = [[CKMessage alloc] initWithContact:contact
@@ -528,7 +521,7 @@ didStartElement:(NSString *)elementName
   qualifiedName:(NSString *)qName 
      attributes:(NSDictionary *)attributeDict
 {
-    //NSDebug(@"didStartElement: %@", elementName);
+    //CKDebug(@"didStartElement: %@", elementName);
     // if we are not processing any element, start processing of a new element
     if (processingElement == NO) {
         currentElement = [CKStanzaLibrary elementTypeForName:elementName];
@@ -556,7 +549,7 @@ didStartElement:(NSString *)elementName
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
-    //NSDebug(@"foundCharacters: %@", string);
+    //CKDebug(@"foundCharacters: %@", string);
     if (processingElement == YES) {
         [receivedElement appendString:string];
     }
@@ -567,7 +560,7 @@ didStartElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI 
  qualifiedName:(NSString *)qName
 {
-    //NSDebug(@"didEndElement: %@", elementName);
+    //CKDebug(@"didEndElement: %@", elementName);
     if (processingElement == YES) {
         // if the element type is the one currently being processed, we've
         // reached the end, send it off for processing
@@ -586,7 +579,7 @@ didStartElement:(NSString *)elementName
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError
 {
-    NSDebug(@"Error %ld, Description: %@, Line: %ld, Column: %ld", 
+    CKDebug(@"[-] Error %ld, Description: %@, Line: %ld, Column: %ld", 
             [parseError code], [parseError localizedDescription], 
             [parser lineNumber], [parser columnNumber]);
 }

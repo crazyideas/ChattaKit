@@ -10,10 +10,10 @@
 @class CKMessage;
 
 typedef enum {
-    kContactOnline,
-    kContactOffline,
-    kContactIndeterminate
-} ContactConnectionState;
+    ContactStateOnline,
+    ContactStateOffline,
+    ContactStateIndeterminate
+} ContactState;
 
 @interface CKContact : NSObject <NSCoding>
 {
@@ -24,9 +24,9 @@ typedef enum {
 @property (atomic, strong) NSString *jabberIdentifier;
 @property (atomic, strong) NSString *displayName;
 @property (atomic, strong) NSString *phoneNumber;
+@property (nonatomic) ContactState connectionState;
 @property (atomic) NSUInteger unreadCount;
-@property (atomic) ContactConnectionState connectionState;
-@property (strong, nonatomic, readonly) NSArray  *messages;
+@property (strong, nonatomic, readonly) NSArray *messages;
 
 - (CKContact *)init;
 - (CKContact *)initWithJabberIdentifier:(NSString *)jid
@@ -35,11 +35,10 @@ typedef enum {
 - (CKContact *)initWithJabberIdentifier:(NSString *)jid
                        andDisplayName:(NSString *)displayName 
                        andPhoneNumber:(NSString *)phoneNumber
-                      andContactState:(ContactConnectionState)contactState;
+                      andContactState:(ContactState)contactState;
 
 - (void)addMessage:(CKMessage *)message;
 - (void)replaceMessagesWith:(NSArray *)messages;
-- (void)updateConnectionState:(ContactConnectionState)connectionState;
 - (BOOL)isEqualToContact:(CKContact *)object;
 
 @end

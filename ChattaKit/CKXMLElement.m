@@ -83,7 +83,7 @@
         
         xmlDocPtr doc = xmlReadMemory(content, length, "noname.xml", NULL, 0);
         if (doc == NULL) {
-            NSDebug(@"xmlReadMemory returned NULL");
+            CKDebug(@"[-] xmlReadMemory returned NULL");
             return nil;
         }
         

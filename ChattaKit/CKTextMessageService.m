@@ -63,14 +63,14 @@
                                                    withBody:requestBody];
         
         if (requestResult == nil) {
-            NSDebug(@"(login) rawHttpRequest failed");
+            CKDebug(@"[-] (login) rawHttpRequest failed");
             [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
             return;
         }
         
         for (NSString *errorCode in [CKConstants serviceErrorCodes]) {
             if ([requestResult rangeOfString:errorCode].location != NSNotFound) {
-                NSDebug(@"connection failed due to code: %@", errorCode);
+                CKDebug(@"[-] connection failed due to code: %@", errorCode);
                 [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
                 return;
             }
@@ -92,19 +92,20 @@
         // set authorizationToken
         weak_self.authorizationToken = [NSString stringWithString:[tokens objectForKey:@"Auth"]];
         if (weak_self.authorizationToken == nil) {
-            NSDebug(@"connection failed, authorizationToken is nil");
+            CKDebug(@"[-] connection failed, authorizationToken is nil");
             [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
             return;
         }
         
         // fetch account keys (_rnr_se, r, and timezone)
         if ([weak_self fetchAccountKeys] == NO) {
-            NSDebug(@"connection failed, account keys not fetched");
+            CKDebug(@"[-] connection failed, account keys not fetched");
             [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
             return;
         }
         
-        NSDebug(@"login to text service successful");
+        CKDebug(@"[+] login to text service successful");
+        CKDebug(@"[+] connection to text service established");
 
         // setup time service
         CKTimeService *timeService = [CKTimeService sharedInstance];
@@ -163,7 +164,7 @@
                                                    withBody:requestBody];
         
         if (requestResult == nil) {
-            NSDebug(@"rawHttpRequest failed");
+            CKDebug(@"[-] rawHttpRequest failed");
             return;
         }
         
@@ -208,7 +209,7 @@
         contact = [[CKContact alloc] initWithJabberIdentifier:nil
                                                andDisplayName:contactPhoneNumber
                                                andPhoneNumber:contactPhoneNumber
-                                              andContactState:kContactOffline];
+                                              andContactState:ContactStateOffline];
         [[CKContactList sharedInstance] addContact:contact];
     }
     return contact;
@@ -358,6 +359,7 @@
     NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
     NSArray *diffArray = [diffSet sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
     for (CKMessage *diffMessage in diffArray) {
+        CKDebug(@"[+] received message: %@; from: %@", diffMessage.text, diffMessage.contact.phoneNumber);
         [[CKContactList sharedInstance] newMessage:diffMessage forContact:contact];
     }
 }
@@ -370,7 +372,7 @@
                                                                    options:0 
                                                                      error:&jsonParsingError];
     if(jsonParsingError != nil) {
-        NSDebug(@"JSON Parsing Error: %@", jsonParsingError);
+        CKDebug(@"[-] json parsing error: %@", jsonParsingError);
         return;
     }
     
@@ -544,12 +546,12 @@
 - (void)startFetchUnreadMessagesTimer
 {
     timerBlock_t fetchUnreadMessages = ^(void) {
-        NSDebug(@"fetching unread messages");
+        CKDebug(@"[+] fetching unread messages");
 
         __weak CKTextMessageService *weak_self = self;
 
         if (weak_self.authorizationToken == nil) {
-            NSDebug(@"fetch failed, no auth token");
+            CKDebug(@"[-] fetch failed, no auth token");
             return;
         }
         
@@ -557,7 +559,7 @@
                                                       onURL:SERVICE_UNREAD_INBOX_URL 
                                                    withBody:nil];
         if (requestResult == nil) {
-            NSDebug(@"rawHttpRequest result failed in fetch undread, logging out");
+            CKDebug(@"[-] rawHttpRequest result failed in fetch undread, logging out");
             [weak_self.chattaKit logoutOfService];
             return;
         }
@@ -607,7 +609,7 @@
                                           withBody:requestBody];
 
     if (requestResult == nil) {
-        NSDebug(@"rawHttpRequest failed");
+        CKDebug(@"[-] rawHttpRequest failed");
         return NO;
     }
     
@@ -648,7 +650,7 @@
                                                       error:&error];
     
     if (error) {
-        NSDebug(@"Connection failed with the following error: %@", error);
+        CKDebug(@"[-] connection failed with the following error: %@", error);
         return nil;
     }
     

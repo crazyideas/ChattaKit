@@ -13,7 +13,7 @@
 - (void)addedContact:(CKContact *)contact;
 - (void)removedContact:(CKContact *)contact;
 - (void)newMessage:(CKMessage *)message forContact:(CKContact *)contact;
-- (void)contactConnectionStateUpdated:(ContactConnectionState)state forContact:(CKContact *)contact;
+- (void)contactConnectionStateUpdated:(ContactState)state forContact:(CKContact *)contact;
 @end
 
 @interface CKContactList : NSObject

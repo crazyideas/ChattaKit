@@ -85,7 +85,7 @@
     
     dispatch_sync(m_serialDispatchQueue, ^(void) { 
         for (CKContact *contact in m_contactList) {
-            if (contact.connectionState == kContactOnline) {
+            if (contact.connectionState == ContactStateOnline) {
                 [onlineArray addObject:contact];
             }
         }

@@ -35,6 +35,7 @@
         
         [CKContactList sharedInstance].me = me;
         
+        self.chattaState = ChattaStateDisconnected;
         self.checkInterval = 30;
     }
     return self;
@@ -69,7 +70,7 @@
 - (BOOL)sendMessage:(NSString *)message toContact:(CKContact *)contact
 {
     // if contact is online, send the message via the instant messaging service
-    if ([contact connectionState] == kContactOnline) {
+    if ([contact connectionState] == ContactStateOnline) {
         [instantMessageService sendMessage:message toContact:contact];
     } 
     // otherwise send via the text messaging service
@@ -105,7 +106,7 @@
         // update all contacts to offline, then let the asynchronous presence
         // notifications come in to reflect if they are online or not
         for (CKContact *contact in [contactList allContacts]) {
-            [contact updateConnectionState:kContactOffline];
+            contact.connectionState = ContactStateOffline;
         }
     }
     // if either service gets disconnected, inform delegate that we are not longer connected
@@ -124,7 +125,7 @@
             // update all contacts to indeterminate since we are
             // not longer connected to either service  
             for (CKContact *contact in [contactList allContacts]) {
-                [contact updateConnectionState:kContactIndeterminate];
+                contact.connectionState = ContactStateIndeterminate;
             }
         }
     }

@@ -45,7 +45,7 @@
                          "xmlns=\'jabber:client\' xml:lang=\'en\' "
                          "to=\'%@\' version=\'1.0\'>", domain];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -53,7 +53,7 @@
 {
     NSString *message = @"</stream:stream>";
     
-    //NSDebug(@"Returning SnitWithString:@"</stream:stream>"]tanza: %@", message);
+    //CKDebug(@"Returning SnitWithString:@"</stream:stream>"]tanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -68,7 +68,7 @@
                           "ga:client-uses-full-bind-result=\'true\' "
                           "mechanism=\'PLAIN\'>%@</auth>", authEncoded];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -80,7 +80,7 @@
                           "xmlns:stream=\'http://etherx.jabber.org/streams\'>", 
                           jid, domain];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -91,7 +91,7 @@
                           "<bind xmlns=\'urn:ietf:params:xml:ns:xmpp-bind\'>"
                          "<resource>chatta</resource></bind></iq>", identifier];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -102,7 +102,7 @@
                           "<query xmlns=\'jabber:iq:roster\'/></iq>"
                           "<presence/>", jid, identifier];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -117,7 +117,7 @@
                   @"<presence type=\'probe\' from=\'%@\' to=\'%@\'/>", from, to];
     }
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -131,7 +131,7 @@
                          "<feature var='http://jabber.org/protocol/disco#items'/>"
                          "</query></iq>", from, to];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -143,7 +143,7 @@
                          "<body>%@</body>"
                          "</message>", from, identifier, to, msg];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -152,7 +152,7 @@
     NSString *message = [[NSString alloc] initWithFormat:
                          @"<presence to=\'%@\' type=\'%@\'/>", to, type];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -163,7 +163,7 @@
                           "<ping xmlns='urn:xmpp:ping'/>"
                           "</iq>", from, identifier];
     
-    //NSDebug(@"Returning Stanza: %@", message);
+    //CKDebug(@"Returning Stanza: %@", message);
     return [message dataUsingEncoding:NSUTF8StringEncoding];            
 }
 
