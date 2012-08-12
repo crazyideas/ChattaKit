@@ -86,6 +86,11 @@
     [instantMessageService sendPresenceProbeTo:contact];
 }
 
+- (CKRoster *)requestXmppRoster
+{
+    return instantMessageService.xmppRoster;
+}
+
 #pragma mark Contact Management and Implementation of ChattaKitDelegate
 
 - (void)connectionNotificationFrom:(id)sender withState:(BOOL)connected

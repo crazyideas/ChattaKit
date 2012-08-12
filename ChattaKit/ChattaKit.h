@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CKRoster.h"
 
 // chatta constants
 typedef enum {
@@ -49,6 +50,7 @@ typedef enum {
 // send method
 - (BOOL)sendMessage:(NSString *)message toContact:(CKContact *)contact;
 - (void)requestContactStatus:(CKContact *)contact;
+- (CKRoster *)requestXmppRoster;
 
 // contacts, new messages, and state management methods
 - (void)connectionNotificationFrom:(id)sender withState:(BOOL)connected;
