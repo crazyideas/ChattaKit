@@ -36,7 +36,7 @@
 @property (strong, nonatomic) NSString *fullJabberIdentifier;
 @property (strong, nonatomic) NSString *infoQueryIdentifier;
 @property (strong, nonatomic) NSString *streamNamespace;
-@property (strong, nonatomic) CKRoster *onlineRoster;
+@property (strong, nonatomic) CKRoster *xmppRoster;
 @property (nonatomic) ServiceStreamState streamState;
 @property (nonatomic) BOOL signedIn;
 

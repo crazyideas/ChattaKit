@@ -38,7 +38,7 @@
         currentElement = kInvalidElementType;
         processingElement = NO;
         
-        self.onlineRoster = [[CKRoster alloc] init];
+        self.xmppRoster = [[CKRoster alloc] init];
     }
     
     return self;
@@ -230,19 +230,13 @@
 
 - (void)sendPresenceProbeTo:(CKContact *)contact
 {
-    CKRosterItem *rosterItem = [self.onlineRoster
-        rosterItemForBareJabberIdentifier:contact.jabberIdentifier];
-    if (rosterItem == nil) {
-        contact.connectionState = ContactStateOffline;
+    CKRosterItem *rosterItem =
+        [self.xmppRoster rosterItemForBareJabberIdentifier:contact.jabberIdentifier];
+    if (rosterItem.online == YES) {
+        contact.connectionState = ContactStateOnline;
         return;
     }
-    contact.connectionState = ContactStateOnline;
-    
-    /* fix corner case of resource having space before using if using presence probes
-    NSData *stanza = [CKStanzaLibrary presenceProbeFrom:self.fullJabberIdentifier
-        to:rosterItem.fullJabberIdentifier];
-    [self writeRawBytes:stanza toStream:outputStream];
-    */
+    contact.connectionState = ContactStateOffline;
 }
 
 // selector for server ping keep alive
@@ -399,13 +393,16 @@
                     
                     /* ignore ping response iq from server */
                     
-                    /* ignore roster response iq from server */
-                    /* NSString *queryNamespace = [query.xmlns objectAtIndex:0];
+                    /* fill in roster with bare jids */
+                    NSString *queryNamespace = [query.xmlns objectAtIndex:0];
                     if ([queryNamespace isEqualToString:@"xmlns=\'jabber:iq:roster\'"]) {
-                        for (XMLElement *item in query.elements) {
-                            CKDebug(@"roster item: %@", [item.attributes objectForKey:@"jid"]);
+                        for (CKXMLElement *item in query.elements) {
+                            CKRosterItem *rosterItem = [[CKRosterItem alloc] init];
+                            rosterItem.bareJabberIdentifier = [item.attributes objectForKey:@"jid"];
+                            rosterItem.online = NO;
+                            [self.xmppRoster addRosterItem:rosterItem];
                         }
-                    } */
+                    }
                     
                     if ([[query.xmlns lastObject]
                             isEqualToString:@"xmlns='http://jabber.org/protocol/disco#info'"]) {
@@ -431,9 +428,9 @@
                     if ([[xmlElement.attributes objectForKey:@"type"] isEqualToString:@"unavailable"]) {
                         // remove from roster
                         CKRosterItem *rosterItem =
-                            [self.onlineRoster rosterItemForFullJabberIdentifier:contactFullJid];
+                            [self.xmppRoster rosterItemForBareJabberIdentifier:contactBareJid];
                         if (rosterItem != nil) {
-                            [self.onlineRoster removeRosterItem:rosterItem];
+                            rosterItem.online = NO;
                         }
                   
                         // update chatta
@@ -441,18 +438,20 @@
                     }
                     // contact requested to add you to their buddy list
                     else if ([[xmlElement.attributes objectForKey:@"type"] isEqualToString:@"subscribe"]) {
-                        //CKDebug(@"contact: %@, friend request", contactJabberIdentifier);
+                        CKDebug(@"[+] friend request from contact: %@", contactFullJid);
                     }
                     // contact signed on
                     else {
                         // add to roster
                         CKRosterItem *rosterItem =
-                            [self.onlineRoster rosterItemForFullJabberIdentifier:contactFullJid];
+                            [self.xmppRoster rosterItemForBareJabberIdentifier:contactBareJid];
                         if (rosterItem == nil) {
                             rosterItem = [[CKRosterItem alloc] init];
-                            rosterItem.fullJabberIdentifier = contactFullJid;
+                            rosterItem.bareJabberIdentifier = contactBareJid;
                         }
-                        [self.onlineRoster addRosterItem:rosterItem];
+                        rosterItem.online = YES;
+                        rosterItem.fullJabberIdentifier = contactFullJid;
+                        [self.xmppRoster addRosterItem:rosterItem];
 
                         // update chatta
                         contact.connectionState = ContactStateOnline;
