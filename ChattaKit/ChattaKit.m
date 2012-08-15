@@ -108,10 +108,9 @@
         self.chattaState = ChattaStateConnected;
         [self.delegate connectionStateNotification:self.chattaState];
         
-        // update all contacts to offline, then let the asynchronous presence
-        // notifications come in to reflect if they are online or not
+        // request presence information from all contacts to update status
         for (CKContact *contact in [contactList allContacts]) {
-            contact.connectionState = ContactStateOffline;
+            [self requestContactStatus:contact];
         }
     }
     // if either service gets disconnected, inform delegate that we are not longer connected

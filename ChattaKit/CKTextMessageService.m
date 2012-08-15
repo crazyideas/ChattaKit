@@ -9,8 +9,7 @@
 #import "NSString+CKAdditions.h"
 #import "CKTimeService.h"
 #import "CKContactList.h"
-#import "CKXMLElement.h"
-#import "CKXMLParser.h"
+#import "CKXMLDocument.h"
 #import "CKContact.h"
 #import "CKMessage.h"
 
@@ -20,6 +19,7 @@
 - (NSString *)timezoneRequest;
 - (NSString *)sendKeyRequest;
 - (NSString *)refreshKeyRequest;
+- (NSString *)contactsRequest;
 
 - (void)startFetchUnreadMessagesTimer;
 - (void)stopFetchUnreadMessagesTimer;
@@ -30,13 +30,6 @@
 
 
 @implementation CKTextMessageService
-
-@synthesize chattaKit          = _chattaKit;
-@synthesize authorizationToken = _authorizationToken;
-@synthesize accountTimezone    = _accountTimezone;
-@synthesize accountSendKey     = _accountSendKey;
-@synthesize accountRefreshKey  = _accountRefreshKey;
-
 
 #pragma mark - CKTextMessageService Public Methods
 
@@ -63,7 +56,7 @@
                                                    withBody:requestBody];
         
         if (requestResult == nil) {
-            CKDebug(@"[-] (login) rawHttpRequest failed");
+            CKDebug(@"[-] (login, text service) rawHttpRequest failed");
             [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
             return;
         }
@@ -90,8 +83,8 @@
         }
         
         // set authorizationToken
-        weak_self.authorizationToken = [NSString stringWithString:[tokens objectForKey:@"Auth"]];
-        if (weak_self.authorizationToken == nil) {
+        weak_self.textAuthToken = [NSString stringWithString:[tokens objectForKey:@"Auth"]];
+        if (weak_self.textAuthToken == nil) {
             CKDebug(@"[-] connection failed, authorizationToken is nil");
             [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
             return;
@@ -118,10 +111,10 @@
 
 - (void)logoutOfService
 {
-    self.authorizationToken = nil;
-    self.accountTimezone    = nil;
-    self.accountSendKey     = nil;
-    self.accountRefreshKey  = nil;
+    self.textAuthToken     = nil;
+    self.accountTimezone   = nil;
+    self.accountSendKey    = nil;
+    self.accountRefreshKey = nil;
     
     [self stopFetchUnreadMessagesTimer];
     [self.chattaKit connectionNotificationFrom:self withState:NO];
@@ -136,7 +129,7 @@
         NSDate *now = [NSDate date];
         
         // check if authorizationToken has value
-        if (weak_self.authorizationToken == nil) {
+        if (weak_self.textAuthToken == nil) {
             return;
         }
         
@@ -151,9 +144,11 @@
         }
         
         // url encoded versions of all information being sent
-        NSString *phoneNumberEncoded = [NSString stringWithUrlEncoding:contact.phoneNumber];
-        NSString *messageTextEncoded = [NSString stringWithUrlEncoding:message];
-        NSString *sendKeyTextEncoded = [NSString stringWithUrlEncoding:weak_self.accountSendKey];
+        
+        
+        NSString *phoneNumberEncoded = [contact.phoneNumber stringWithUrlEncoding];
+        NSString *messageTextEncoded = [message stringWithUrlEncoding];
+        NSString *sendKeyTextEncoded = [weak_self.accountSendKey stringWithUrlEncoding];
         
         // create bytes of http post body
         NSString *requestBody = [NSString stringWithFormat:@"phoneNumber=%@&text=%@&_rnr_se=%@", 
@@ -171,11 +166,15 @@
         if ([requestResult isEqualToString:@"{\"ok\":true,\"data\":{\"code\":0}}"]) {
             CKContact *me = [CKContactList sharedInstance].me;
             CKMessage *newMessage = [[CKMessage alloc] initWithContact:me
-                                                             timestamp:now 
-                                                           messageText:message];
+                timestamp:now messageText:message];
             [[CKContactList sharedInstance] newMessage:newMessage forContact:contact];
         }
     });
+}
+
+- (NSString *)requestServiceContactList
+{
+    return [self contactsRequest];
 }
 
 - (void)dealloc
@@ -206,10 +205,8 @@
     
     CKContact *contact = [[CKContactList sharedInstance] contactWithPhoneNumber:contactPhoneNumber];
     if (contact == nil) {
-        contact = [[CKContact alloc] initWithJabberIdentifier:nil
-                                               andDisplayName:contactPhoneNumber
-                                               andPhoneNumber:contactPhoneNumber
-                                              andContactState:ContactStateOffline];
+        contact = [[CKContact alloc] initWithJabberIdentifier:nil andDisplayName:contactPhoneNumber
+            andPhoneNumber:contactPhoneNumber andContactState:ContactStateOffline];
         [[CKContactList sharedInstance] addContact:contact];
     }
     return contact;
@@ -369,15 +366,18 @@
     NSError *jsonParsingError = nil;
     
     NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:jsonResponse 
-                                                                   options:0 
-                                                                     error:&jsonParsingError];
+        options:0 error:&jsonParsingError];
+    
     if(jsonParsingError != nil) {
         CKDebug(@"[-] json parsing error: %@", jsonParsingError);
         return;
     }
     
     // init parser and grab root node of document
-    CKXMLParser *htmlParser = [[CKXMLParser alloc] initParserWith:htmlResponse];
+    NSString *htmlResponseString =
+        [[NSString alloc] initWithData:htmlResponse encoding:NSUTF8StringEncoding];
+    CKXMLDocument *htmlDocument =
+        [[CKXMLDocument alloc] initWithHTMLString:htmlResponseString options:CKXMLDocumentTidyHTML];
     
     // iterate over all threads
     NSDictionary *allThreads = [jsonDictionary objectForKey:@"messages"];
@@ -388,14 +388,14 @@
         NSString *xpathExpr = [NSString stringWithFormat:
                                @"//div[@id=\'%@\' and @class=\'%@\']//div[@class=\'%@\']",
                                threadId, DIV_ID_NODE_CLASS, DIV_MESSAGE_CLASS];
-        NSArray *messageElements = [htmlParser elementsWithXpathExpression:xpathExpr];
-        for (CKXMLElement *messageElement in messageElements) {
+        NSArray *messageElements = [htmlDocument elementsForXpathExpression:xpathExpr];
+        for (CKXMLDocument *messageElement in messageElements) {
             // by default set all messages names to other party, on instances of 
             // "Me:", replace with self full name
             CKMessage *message = [[CKMessage alloc] initWithContact:contact];
             
             NSArray *spanElements = [messageElement elementsForName:@"span"];
-            for (CKXMLElement *span in spanElements) {
+            for (CKXMLDocument *span in spanElements) {
                 NSString *classAttr = [span.attributes objectForKey:@"class"];
                 if ([classAttr isEqualToString:SPAN_MESSAGE_TEXT_CLASS]) { 
                     message.text = [span.content stringByRemovingWhitespaceNewlineChars];
@@ -425,9 +425,6 @@
         [self markMessageAsRead:threadId];
 
     }
-    
-    // parser cleanup
-    [htmlParser parserCleanup];
 }
 
 
@@ -439,18 +436,21 @@
     // update send key (_rnr_se)
     self.accountSendKey = [self sendKeyRequest];
     if (self.accountSendKey == nil) {
+        CKDebug(@"[-] unable to retrieve account send key");
         return NO;
     }
     
     // update refresh key (r)
     self.accountRefreshKey = [self refreshKeyRequest];
     if (self.accountRefreshKey == nil) {
+        CKDebug(@"[-] unable to retrieve account refresh key");
         return NO;
     }
     
     // update account timezone value
     self.accountTimezone = [self timezoneRequest];
     if (self.accountTimezone == nil) {
+        CKDebug(@"[-] unable to retrieve account Timezone");
         return NO;
     }
     
@@ -459,7 +459,7 @@
 
 - (NSString *)timezoneRequest
 {
-    if (self.authorizationToken == nil) {
+    if (self.textAuthToken == nil) {
         return nil;
     }
     
@@ -485,7 +485,7 @@
 {
     NSString *_rnr_se;
 
-    if (self.authorizationToken == nil) {
+    if (self.textAuthToken == nil) {
         return nil;
     }
     
@@ -495,12 +495,11 @@
     }
     
     // init parser
-    CKXMLParser *htmlParser = [[CKXMLParser alloc] initParserWith:
-                               [requestResult dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSArray *inputNodes = [htmlParser elementsWithXpathExpression:@"//input[@name]"];
-    CKXMLElement *rnrseElement = nil;
-    for (CKXMLElement *inputElement in inputNodes) {
+    CKXMLDocument *htmlDocument =
+        [[CKXMLDocument alloc] initWithHTMLString:requestResult options:CKXMLDocumentTidyHTML];
+    NSArray *inputNodes = [htmlDocument elementsForXpathExpression:@"//input[@name]"];
+    CKXMLDocument *rnrseElement = nil;
+    for (CKXMLDocument *inputElement in inputNodes) {
         if ([[[inputElement attributes] objectForKey:@"name"] isEqualToString:@"_rnr_se"]) {
             rnrseElement = inputElement;
             break;
@@ -513,15 +512,12 @@
     
     _rnr_se = [[NSString alloc] initWithString:[rnrseElement.attributes objectForKey:@"value"]];
     
-    // parser cleanup
-    [htmlParser parserCleanup];
-    
     return _rnr_se;
 }
 
 - (NSString *)refreshKeyRequest
 {
-    if (self.authorizationToken == nil) {
+    if (self.textAuthToken == nil) {
         return nil;
     }
     
@@ -543,6 +539,20 @@
     return [requestResult substringWithRange:refreshKeyRange];
 }
 
+- (NSString *)contactsRequest
+{
+    if (self.textAuthToken == nil) {
+        return nil;
+    }
+    
+    NSString *requestResult = [self rawHttpRequest:@"GET" onURL:SERVICE_CONTACTS_REQ_URL withBody:nil];
+    if (requestResult == nil) {
+        return nil;
+    }
+    
+    return requestResult;
+}
+
 - (void)startFetchUnreadMessagesTimer
 {
     timerBlock_t fetchUnreadMessages = ^(void) {
@@ -550,7 +560,7 @@
 
         __weak CKTextMessageService *weak_self = self;
 
-        if (weak_self.authorizationToken == nil) {
+        if (weak_self.textAuthToken == nil) {
             CKDebug(@"[-] fetch failed, no auth token");
             return;
         }
@@ -584,9 +594,7 @@
     };
     
     fetchUnreadMessagesTimer = [[CKTimer alloc] initWithDispatchTime:1.0 
-                                                            interval:30 
-                                                               queue:dispatch_queue 
-                                                               block:fetchUnreadMessages];
+        interval:30 queue:dispatch_queue block:fetchUnreadMessages];
 }
 
 - (void)stopFetchUnreadMessagesTimer
@@ -597,7 +605,7 @@
 // check if this method is always called in a queue
 - (BOOL)markMessageAsRead:(NSString *)messageIdentification
 {
-    if (self.authorizationToken == nil) {
+    if (self.textAuthToken == nil) {
         return NO;
     }
     
@@ -605,8 +613,7 @@
                              messageIdentification, self.accountSendKey];
     
     NSString *requestResult = [self rawHttpRequest:@"POST" 
-                                             onURL:SERVICE_MARK_MESSAGE_URL 
-                                          withBody:requestBody];
+        onURL:SERVICE_MARK_MESSAGE_URL withBody:requestBody];
 
     if (requestResult == nil) {
         CKDebug(@"[-] rawHttpRequest failed");
@@ -629,14 +636,13 @@
     NSError *error;
     
     httpRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]
-                                               cachePolicy:NSURLRequestReloadIgnoringLocalCacheData 
-                                           timeoutInterval:30];
+        cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
     
     [httpRequest setHTTPMethod:method];
     [httpRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    
-    if (self.authorizationToken) {
-        authString = [NSString stringWithFormat:@"GoogleLogin auth=%@", self.authorizationToken];
+
+    if (self.textAuthToken) {
+        authString = [NSString stringWithFormat:@"GoogleLogin auth=%@", self.textAuthToken];
         [httpRequest setValue:authString forHTTPHeaderField:@"Authorization"];
     }
     
@@ -645,9 +651,8 @@
     }
     
     
-    requestResult = [NSURLConnection sendSynchronousRequest:httpRequest 
-                                          returningResponse:&response 
-                                                      error:&error];
+    requestResult = [NSURLConnection sendSynchronousRequest:httpRequest
+        returningResponse:&response error:&error];
     
     if (error) {
         CKDebug(@"[-] connection failed with the following error: %@", error);

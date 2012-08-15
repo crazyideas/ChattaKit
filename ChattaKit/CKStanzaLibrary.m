@@ -167,32 +167,4 @@
     return [message dataUsingEncoding:NSUTF8StringEncoding];            
 }
 
-
-
-+ (NSString *)cleanupStanza:(NSString *)xmlstring
-{
-    if (xmlstring == nil) {
-        return nil;
-    }
-    
-    NSMutableString *s = [[NSMutableString alloc] initWithString:xmlstring];
-
-    // add a close tags so libxml2 doesn't complain
-    if ([s containsString:@"<stream:stream"]) {
-        [s appendString:@"</stream:stream>"];
-        return [s copy];
-    }
-    if ([s containsString:@"<stream:error"]) {
-        [s appendString:@"</stream:error>"];
-        return [s copy];
-    }
-    
-    // weird char that causes libxml2 to crash
-    if ([s containsString:@"’"]) {
-        return [xmlstring stringByReplacingOccurrencesOfString:@"’" withString:@""];
-    }
-    
-    return xmlstring;
-}
-
 @end

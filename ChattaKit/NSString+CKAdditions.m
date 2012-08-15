@@ -10,6 +10,8 @@
 
 @implementation NSString (CKAdditions)
 
+#pragma mark - Instance Methods
+
 - (BOOL)containsString:(NSString *)string
 {
     return [self rangeOfString:string].location != NSNotFound;
@@ -21,7 +23,7 @@
     const char *source = [self cStringUsingEncoding:NSUTF8StringEncoding];
     size_t source_len = [self length];
     
-    // get the length of the destination string (includes null 
+    // get the length of the destination string (includes null
     // terminator) and malloc memory
     size_t destination_len = Base64encode_len(source_len);
     char *destination = malloc(destination_len);
@@ -33,7 +35,7 @@
     Base64encode(destination, source, (int)source_len);
     
     // convert c string to nsstring
-    NSString *encodedString = [NSString stringWithCString:destination 
+    NSString *encodedString = [NSString stringWithCString:destination
                                                  encoding:NSUTF8StringEncoding];
     
     // free up memory
@@ -48,7 +50,7 @@
 {
     const char *source = [self cStringUsingEncoding:NSUTF8StringEncoding];
     
-    // get the length of the destination string (includes null 
+    // get the length of the destination string (includes null
     // terminator) and malloc memory
     size_t destination_len = Base64decode_len(source);
     char *destination = malloc(destination_len);
@@ -60,7 +62,7 @@
     Base64decode(destination, source);
     
     // convert c string to nsstring
-    NSString *decodedString = [NSString stringWithCString:destination 
+    NSString *decodedString = [NSString stringWithCString:destination
                                                  encoding:NSUTF8StringEncoding];
     
     // free up memory
@@ -71,33 +73,17 @@
     return decodedString;
 }
 
-- (NSString *) stringByRemovingWhitespaceNewlineChars
+- (NSString *)stringWithUrlEncoding
+{
+    return [self stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+}
+
+- (NSString *)stringByRemovingWhitespaceNewlineChars
 {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-+ (NSString *)stringByStrippingTag:(NSString *)name fromXMLString:(NSString *)string
-{
-    // start element range
-    NSRange elementStart = [string rangeOfString:[NSString stringWithFormat:@"<%@", name]];
-    NSRange startRange = NSMakeRange(0, elementStart.location);
-    if (elementStart.location == NSNotFound) {
-        return string;
-    }
-    
-    // end element range
-    NSRange elementEnd = [string rangeOfString:[NSString stringWithFormat:@"</%@>", name]];
-    NSUInteger end_location = elementEnd.location + (name.length + 3);
-    NSRange endRange = NSMakeRange(end_location, string.length - end_location);
-    if (endRange.location == NSNotFound) {
-        return string;
-    }
-    
-    // return stripped string
-    return [NSString stringWithFormat:@"%@%@", 
-            [string substringWithRange:startRange], 
-            [string substringWithRange:endRange]];
-}
+#pragma mark - Class Methods
 
 + (NSString *)randomStringWithLength:(NSUInteger)length
 {
@@ -123,10 +109,11 @@
     return randomString;
 }
 
-+ (NSString *)stringWithUrlEncoding:(NSString *)string
++ (const char *)encodingBufferWithEncoding:(NSStringEncoding)encoding
 {
-    return [string stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    CFStringEncoding cfstrenc = CFStringConvertNSStringEncodingToEncoding(encoding);
+    CFStringRef cfstrref = CFStringConvertEncodingToIANACharSetName(cfstrenc);
+    return CFStringGetCStringPtr(cfstrref, 0);
 }
-
 
 @end

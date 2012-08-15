@@ -24,6 +24,8 @@ extern NSString * const SERVICE_MARK_MESSAGE_URL;
 extern NSString * const SERVICE_UNREAD_INBOX_URL;
 extern NSString * const SERVICE_SEND_URL;
 
+extern NSString * const SERVICE_CONTACTS_REQ_URL;
+
 + (NSArray *)serviceErrorCodes;
 
 // instant message service constants

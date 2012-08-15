@@ -17,7 +17,8 @@
 }
 
 @property (nonatomic, weak) ChattaKit *chattaKit;
-@property (nonatomic, strong) NSString *authorizationToken;
+@property (nonatomic, strong) NSString *textAuthToken;
+@property (nonatomic, strong) NSString *contactsAuthToken;
 @property (nonatomic, strong) NSString *accountTimezone;
 @property (nonatomic, strong) NSString *accountSendKey;
 @property (nonatomic, strong) NSString *accountRefreshKey;

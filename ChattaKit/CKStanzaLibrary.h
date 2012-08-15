@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CKXMLElement.h"
 
 @interface CKStanzaLibrary : NSObject
 
@@ -26,8 +25,5 @@
 + (NSData *)presenceProbeFrom:(NSString *)from to:(NSString *)to;
 + (NSData *)presenceType:(NSString *)type to:(NSString *)to;
 + (NSData *)pingFrom:(NSString *)from withId:(NSString *)identifier;
-
-// string cleanup utility
-+ (NSString *)cleanupStanza:(NSString *)xmlstring;
 
 @end

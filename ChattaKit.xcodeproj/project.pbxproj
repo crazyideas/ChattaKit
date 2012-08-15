@@ -20,6 +20,11 @@
 		278A8DB6159D62EB0086C422 /* CKContactList.m in Sources */ = {isa = PBXBuildFile; fileRef = 278A8DB0159D62EB0086C422 /* CKContactList.m */; };
 		278A8DB7159D62EB0086C422 /* CKMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 278A8DB1159D62EB0086C422 /* CKMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		278A8DB8159D62EB0086C422 /* CKMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 278A8DB2159D62EB0086C422 /* CKMessage.m */; };
+		27A6483C15DA23D400596713 /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A6483B15DA23D400596713 /* libtidy.dylib */; };
+		27A6484215DA242500596713 /* CKTidy.h in Headers */ = {isa = PBXBuildFile; fileRef = 27A6483E15DA242500596713 /* CKTidy.h */; };
+		27A6484315DA242500596713 /* CKTidy.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A6483F15DA242500596713 /* CKTidy.m */; };
+		27A6484415DA242500596713 /* CKXMLDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 27A6484015DA242500596713 /* CKXMLDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		27A6484515DA242500596713 /* CKXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A6484115DA242500596713 /* CKXMLDocument.m */; };
 		27B7366D159D7274009EC8DD /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = 27B7366B159D7274009EC8DD /* base64.c */; };
 		27B7366E159D7274009EC8DD /* base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 27B7366C159D7274009EC8DD /* base64.h */; };
 		27B73683159D7282009EC8DD /* CKConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 27B7366F159D7281009EC8DD /* CKConstants.h */; };
@@ -39,10 +44,6 @@
 		27E3422115A554B70032098A /* CKTextMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421D15A554B70032098A /* CKTextMessageService.m */; };
 		27E3422415A554C60032098A /* CKTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3422215A554C60032098A /* CKTimer.h */; };
 		27E3422515A554C60032098A /* CKTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3422315A554C60032098A /* CKTimer.m */; };
-		27E3422A15A554DE0032098A /* CKXMLElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3422615A554DE0032098A /* CKXMLElement.h */; };
-		27E3422B15A554DE0032098A /* CKXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3422715A554DE0032098A /* CKXMLElement.m */; };
-		27E3422C15A554DE0032098A /* CKXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3422815A554DE0032098A /* CKXMLParser.h */; };
-		27E3422D15A554DE0032098A /* CKXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3422915A554DE0032098A /* CKXMLParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,11 @@
 		278A8DB0159D62EB0086C422 /* CKContactList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactList.m; sourceTree = "<group>"; };
 		278A8DB1159D62EB0086C422 /* CKMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMessage.h; sourceTree = "<group>"; };
 		278A8DB2159D62EB0086C422 /* CKMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMessage.m; sourceTree = "<group>"; };
+		27A6483B15DA23D400596713 /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
+		27A6483E15DA242500596713 /* CKTidy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTidy.h; sourceTree = "<group>"; };
+		27A6483F15DA242500596713 /* CKTidy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTidy.m; sourceTree = "<group>"; };
+		27A6484015DA242500596713 /* CKXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKXMLDocument.h; sourceTree = "<group>"; };
+		27A6484115DA242500596713 /* CKXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKXMLDocument.m; sourceTree = "<group>"; };
 		27B7366B159D7274009EC8DD /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
 		27B7366C159D7274009EC8DD /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		27B7366F159D7281009EC8DD /* CKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKConstants.h; sourceTree = "<group>"; };
@@ -84,10 +90,6 @@
 		27E3421D15A554B70032098A /* CKTextMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTextMessageService.m; sourceTree = "<group>"; };
 		27E3422215A554C60032098A /* CKTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTimer.h; sourceTree = "<group>"; };
 		27E3422315A554C60032098A /* CKTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTimer.m; sourceTree = "<group>"; };
-		27E3422615A554DE0032098A /* CKXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKXMLElement.h; sourceTree = "<group>"; };
-		27E3422715A554DE0032098A /* CKXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKXMLElement.m; sourceTree = "<group>"; };
-		27E3422815A554DE0032098A /* CKXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKXMLParser.h; sourceTree = "<group>"; };
-		27E3422915A554DE0032098A /* CKXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKXMLParser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27A6483C15DA23D400596713 /* libtidy.dylib in Frameworks */,
 				27B7369D159D759F009EC8DD /* libxml2.dylib in Frameworks */,
 				278A8D9A159D62380086C422 /* Cocoa.framework in Frameworks */,
 			);
@@ -117,10 +120,10 @@
 		277CC457159F78E1002B2353 /* XML */ = {
 			isa = PBXGroup;
 			children = (
-				27E3422615A554DE0032098A /* CKXMLElement.h */,
-				27E3422715A554DE0032098A /* CKXMLElement.m */,
-				27E3422815A554DE0032098A /* CKXMLParser.h */,
-				27E3422915A554DE0032098A /* CKXMLParser.m */,
+				27A6483E15DA242500596713 /* CKTidy.h */,
+				27A6483F15DA242500596713 /* CKTidy.m */,
+				27A6484015DA242500596713 /* CKXMLDocument.h */,
+				27A6484115DA242500596713 /* CKXMLDocument.m */,
 			);
 			name = XML;
 			sourceTree = "<group>";
@@ -128,6 +131,7 @@
 		278A8D8B159D62380086C422 = {
 			isa = PBXGroup;
 			children = (
+				27A6483B15DA23D400596713 /* libtidy.dylib */,
 				27B7369C159D759F009EC8DD /* libxml2.dylib */,
 				278A8D9F159D62380086C422 /* ChattaKit */,
 				278A8D98159D62380086C422 /* Frameworks */,
@@ -251,10 +255,10 @@
 				27E3421E15A554B70032098A /* CKTimeService.h in Headers */,
 				27E3422015A554B70032098A /* CKTextMessageService.h in Headers */,
 				27E3422415A554C60032098A /* CKTimer.h in Headers */,
-				27E3422A15A554DE0032098A /* CKXMLElement.h in Headers */,
-				27E3422C15A554DE0032098A /* CKXMLParser.h in Headers */,
 				2764FB7015CDB914000679D4 /* CKRoster.h in Headers */,
 				2764FB7615CDB931000679D4 /* CKRosterItem.h in Headers */,
+				27A6484215DA242500596713 /* CKTidy.h in Headers */,
+				27A6484415DA242500596713 /* CKXMLDocument.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,10 +325,10 @@
 				27E3421F15A554B70032098A /* CKTimeService.m in Sources */,
 				27E3422115A554B70032098A /* CKTextMessageService.m in Sources */,
 				27E3422515A554C60032098A /* CKTimer.m in Sources */,
-				27E3422B15A554DE0032098A /* CKXMLElement.m in Sources */,
-				27E3422D15A554DE0032098A /* CKXMLParser.m in Sources */,
 				2764FB7115CDB914000679D4 /* CKRoster.m in Sources */,
 				2764FB7715CDB931000679D4 /* CKRosterItem.m in Sources */,
+				27A6484315DA242500596713 /* CKTidy.m in Sources */,
+				27A6484515DA242500596713 /* CKXMLDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +358,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "-lxml2";
+				OTHER_LDFLAGS = (
+					"-lxml2",
+					"-ltidy",
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -375,7 +382,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				OTHER_LDFLAGS = "-lxml2";
+				OTHER_LDFLAGS = (
+					"-lxml2",
+					"-ltidy",
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -386,7 +396,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ChattaKit/ChattaKit-Prefix.pch";
-				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
+				HEADER_SEARCH_PATHS = (
+					"/usr/include/libxml2/**",
+					"/usr/include/tidy/**",
+				);
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -402,7 +415,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ChattaKit/ChattaKit-Prefix.pch";
-				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
+				HEADER_SEARCH_PATHS = (
+					"/usr/include/libxml2/**",
+					"/usr/include/tidy/**",
+				);
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";

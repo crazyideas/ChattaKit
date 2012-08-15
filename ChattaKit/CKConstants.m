@@ -23,6 +23,8 @@ NSString * const SERVICE_MARK_MESSAGE_URL = @"https://www.google.com/voice/inbox
 NSString * const SERVICE_UNREAD_INBOX_URL = @"https://www.google.com/voice/inbox/recent/unread/sms/";
 NSString * const SERVICE_SEND_URL         = @"https://www.google.com/voice/sms/send/";
 
+NSString * const SERVICE_CONTACTS_REQ_URL = @"https://www.google.com/m8/feeds/contacts/default/full?max-results=65535";
+
 + (NSArray *)serviceErrorCodes
 {
     static NSArray *staticServiceErrorCodes;

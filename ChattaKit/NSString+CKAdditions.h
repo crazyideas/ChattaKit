@@ -13,11 +13,11 @@
 - (BOOL)containsString:(NSString *)string;
 - (NSString *)base64EncodedString;
 - (NSString *)base64DecodedString;
+- (NSString *)stringWithUrlEncoding;
 - (NSString *)stringByRemovingWhitespaceNewlineChars;
 
-// static methods
+// class methods
 + (NSString *)randomStringWithLength:(NSUInteger)length;
-+ (NSString *)stringByStrippingTag:(NSString *)name fromXMLString:(NSString *)string;
-+ (NSString *)stringWithUrlEncoding:(NSString *)string;
++ (const char *)encodingBufferWithEncoding:(NSStringEncoding)encoding;
 
 @end

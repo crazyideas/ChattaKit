@@ -17,6 +17,7 @@ typedef enum {
 // forward declaration of classes
 @class CKTextMessageService;
 @class CKInstantMessageService;
+@class CKContactService;
 @class CKContactList;
 @class CKMessage;
 @class CKContact;
@@ -29,6 +30,7 @@ typedef enum {
 @interface ChattaKit : NSObject {    
     CKTextMessageService *textMessageService;
     CKInstantMessageService *instantMessageService;
+    CKContactService *contactService;
     
     BOOL textServiceConnected;
     BOOL instantServiceConnected;
@@ -50,6 +52,8 @@ typedef enum {
 // send method
 - (BOOL)sendMessage:(NSString *)message toContact:(CKContact *)contact;
 - (void)requestContactStatus:(CKContact *)contact;
+
+// request contact and roster information
 - (CKRoster *)requestXmppRoster;
 
 // contacts, new messages, and state management methods

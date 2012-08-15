@@ -6,13 +6,14 @@
 //
 
 #import "CKInstantMessageService.h"
-#import "CKStanzaLibrary.h"
 #import "NSString+CKAdditions.h"
+#import "CKStanzaLibrary.h"
+#import "CKContactList.h"
+#import "CKTimeService.h"
+#import "CKXMLDocument.h"
 #import "ChattaKit.h"
 #import "CKMessage.h"
 #import "CKContact.h"
-#import "CKContactList.h"
-#import "CKTimeService.h"
 
 @implementation CKInstantMessageService
 
@@ -139,11 +140,7 @@
     
     // start a timer that fires every 60 seconds to send a keep alive ping to the server
     serverPingTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:60]
-                                               interval:60
-                                                 target:self 
-                                               selector:@selector(sendServerPing:) 
-                                               userInfo:nil 
-                                                repeats:YES];
+        interval:60 target:self selector:@selector(sendServerPing:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:serverPingTimer forMode:NSDefaultRunLoopMode];
 
     // dispatch messages to queue
@@ -222,8 +219,7 @@
     if (writeSuccess) {
         CKContact *me = [CKContactList sharedInstance].me;
         CKMessage *newMessage = [[CKMessage alloc] initWithContact:me 
-                                                         timestamp:[NSDate date]
-                                                       messageText:message];
+            timestamp:[NSDate date] messageText:message];
         [[CKContactList sharedInstance] newMessage:newMessage forContact:contact];
     }
 }
@@ -255,46 +251,17 @@
 - (void)processElement:(NSString *)element andElementType:(XMLElementType)elementType
 {    
     //CKDebug(@"processElement: %@", element);
-    // if we are processing stream events after the first one, make
-    // sure to add the namespace back in, this will quiet libxml2 
-    // and allow us to not keep too much state in memory
-    CKXMLElement *xmlElement;
-    if (self.streamNamespace != nil && 
-        [element containsString:@"stream:"] &&
-        ![element containsString:@"xmlns:stream"]) {
-        element = [CKStanzaLibrary cleanupStanza:element];
-        xmlElement = [[CKXMLElement alloc] initWithXMLString:element 
-                                          appendingNamespace:self.streamNamespace];
-    }
-    // if it's a message strip off all html before processing
-    else if(self.streamState == kStateConnected && elementType == kStanzaMessage) {
-        element = [NSString stringByStrippingTag:@"html" fromXMLString:element];
-        element = [CKStanzaLibrary cleanupStanza:element];
-        xmlElement = [[CKXMLElement alloc] initWithXMLString:element];
-    }
-    // strip all status messages, should be fixed in the future by escaping things
-    // instead
-    else if(self.streamState == kStateConnected && elementType == kStanzaPresence) { 
-        element = [NSString stringByStrippingTag:@"status" fromXMLString:element];
-        element = [CKStanzaLibrary cleanupStanza:element];
-        xmlElement = [[CKXMLElement alloc] initWithXMLString:element];
-    }
-    // otherwise, process this xml element normally
-    else {
-        element = [CKStanzaLibrary cleanupStanza:element];
-        xmlElement = [[CKXMLElement alloc] initWithXMLString:element];
-    }
+    CKXMLDocument *xmlDocument =
+        [[CKXMLDocument alloc] initWithXMLString:element options:CKXMLDocumentTidyXML];
     
-    // stream level errors are unrecoverable, shut down the stream
-    // if an error has occured
-    if ([xmlElement containsElementsWithName:@"stream:error"]) {
+    // stream level errors are unrecoverable, shut down the stream if an error has occured
+    if ([xmlDocument containsElementsWithName:@"stream:error"]) {
         [self logoutOfService];
     }
     
     switch (self.streamState) {
         case kStateWaitingForStream:
         {
-            self.streamNamespace = [xmlElement xmlnsWithPrefix:@"stream"];
             self.streamState = kStateWaitingForFeatures;
             break;
         }
@@ -302,9 +269,9 @@
         {            
             // check if the server supports the PLAIN authentication mechanism  
             BOOL containsPLAIN = NO;
-            NSArray *mechanisms = [[[xmlElement elementsForName:@"mechanisms"] lastObject] 
+            NSArray *mechanisms = [[[xmlDocument elementsForName:@"mechanisms"] lastObject] 
                                    elementsForName:@"mechanism"];
-            for (CKXMLElement *m in mechanisms) {
+            for (CKXMLDocument *m in mechanisms) {
                 if ([m.content isEqualToString:@"PLAIN"]) {
                     containsPLAIN = YES;
                     break;
@@ -316,8 +283,7 @@
                 [self logoutOfService];
             }
             
-            NSData *stanza = [CKStanzaLibrary authWithUsername:self.username 
-                                                        password:self.password];
+            NSData *stanza = [CKStanzaLibrary authWithUsername:self.username password:self.password];
             [self writeRawBytes:stanza toStream:outputStream];
             self.streamState = kStateWaitingForAuth;
             break;
@@ -325,7 +291,7 @@
         case kStateWaitingForAuth:
         {            
             // login successful
-            if ([xmlElement.name isEqualToString:@"success"]) {
+            if ([xmlDocument.name isEqualToString:@"success"]) {
                 CKDebug(@"[+] login to instant service successful");
                 NSData *stanza = [CKStanzaLibrary sessionStreamWithJabberIdentifier:self.username 
                                                                          domain:@"gmail.com"];
@@ -342,7 +308,7 @@
         }
         case kStateWaitingForSessionStream:
         {
-            if ([xmlElement.name isEqualToString:@"stream"]) {
+            if ([xmlDocument.name isEqualToString:@"stream"]) {
                 self.streamState = kStateWaitingForFeaturesBindSession;
             } else {
                 [self logoutOfService];
@@ -351,7 +317,7 @@
         }
         case kStateWaitingForFeaturesBindSession:
         {
-            if ([xmlElement elementsForName:@"bind"].count > 0) {
+            if ([xmlDocument elementsForName:@"bind"].count > 0) {
                 self.infoQueryIdentifier = [NSString randomStringWithLength:8];
                 NSData *stanza = [CKStanzaLibrary 
                                   infoQueryBindWithRandomIdentifier:self.infoQueryIdentifier];
@@ -364,12 +330,12 @@
         }
         case kStateWaitingForInfoQueryBind:
         {
-            if ([xmlElement containsElementsWithName:@"error"]) {
+            if ([xmlDocument containsElementsWithName:@"error"]) {
                 [self logoutOfService];
             }
             // extract jid
-            CKXMLElement *bindtag = [xmlElement.elements lastObject];
-            CKXMLElement *jidtag = [[bindtag elementsForName:@"jid"] lastObject];
+            CKXMLDocument *bindtag = [xmlDocument.elements lastObject];
+            CKXMLDocument *jidtag = [[bindtag elementsForName:@"jid"] lastObject];
             self.fullJabberIdentifier = jidtag.content;
             
             // send iq request for roster and presence to indicate we're online
@@ -389,14 +355,14 @@
             switch (elementType) {
                 case kStanzaInfoQuery:
                 {
-                    CKXMLElement *query = [[xmlElement elementsForName:@"query"] lastObject];
+                    CKXMLDocument *query = [[xmlDocument elementsForName:@"query"] lastObject];
                     
                     /* ignore ping response iq from server */
                     
                     /* fill in roster with bare jids */
                     NSString *queryNamespace = [query.xmlns objectAtIndex:0];
                     if ([queryNamespace isEqualToString:@"xmlns=\'jabber:iq:roster\'"]) {
-                        for (CKXMLElement *item in query.elements) {
+                        for (CKXMLDocument *item in query.elements) {
                             CKRosterItem *rosterItem = [[CKRosterItem alloc] init];
                             rosterItem.bareJabberIdentifier = [item.attributes objectForKey:@"jid"];
                             rosterItem.online = NO;
@@ -404,11 +370,12 @@
                         }
                     }
                     
+                    // disco info response
                     if ([[query.xmlns lastObject]
                             isEqualToString:@"xmlns='http://jabber.org/protocol/disco#info'"]) {
-                        NSString *from = [xmlElement.attributes objectForKey:@"from"];
+                        NSString *from = [xmlDocument.attributes objectForKey:@"from"];
                         NSString *bareFrom = [[from componentsSeparatedByString:@"/"] objectAtIndex:0];
-                        
+                    
                         // send iq request for roster and presence to indicate we're online
                         NSData *stanza = [CKStanzaLibrary
                             infoQueryDiscoveryInfoResponseFrom:self.fullJabberIdentifier andTo:bareFrom];
@@ -418,14 +385,14 @@
                 }
                 case kStanzaPresence:
                 {
-                    NSString *contactFullJid = [xmlElement.attributes objectForKey:@"from"];
+                    NSString *contactFullJid = [xmlDocument.attributes objectForKey:@"from"];
                     NSString *contactBareJid =
                         [[contactFullJid componentsSeparatedByString:@"/"] objectAtIndex:0];
                     CKContact *contact =
                         [[CKContactList sharedInstance] contactWithJabberIdentifier:contactBareJid];
                     
                     // contact signed off
-                    if ([[xmlElement.attributes objectForKey:@"type"] isEqualToString:@"unavailable"]) {
+                    if ([[xmlDocument.attributes objectForKey:@"type"] isEqualToString:@"unavailable"]) {
                         // remove from roster
                         CKRosterItem *rosterItem =
                             [self.xmppRoster rosterItemForBareJabberIdentifier:contactBareJid];
@@ -437,7 +404,7 @@
                         contact.connectionState = ContactStateOffline;
                     }
                     // contact requested to add you to their buddy list
-                    else if ([[xmlElement.attributes objectForKey:@"type"] isEqualToString:@"subscribe"]) {
+                    else if ([[xmlDocument.attributes objectForKey:@"type"] isEqualToString:@"subscribe"]) {
                         CKDebug(@"[+] friend request from contact: %@", contactFullJid);
                     }
                     // contact signed on
@@ -461,7 +428,7 @@
                 }
                 case kStanzaMessage:
                 {
-                    NSString *contactFullJid = [xmlElement.attributes objectForKey:@"from"];
+                    NSString *contactFullJid = [xmlDocument.attributes objectForKey:@"from"];
                     NSString *contactBareJid =
                         [[contactFullJid componentsSeparatedByString:@"/"] objectAtIndex:0];
                     CKContact *contact =
@@ -470,21 +437,20 @@
                     // if we don't have a body element, we are not interested
                     // this is usually things like indicating the other user 
                     // is typing 
-                    NSArray *bodyElements = [xmlElement elementsForName:@"body"];
+                    NSArray *bodyElements = [xmlDocument elementsForName:@"body"];
                     if (bodyElements == nil) { 
                         return;
                     }
                     
                     // extract body
-                    CKXMLElement *bodyElement = [bodyElements objectAtIndex:0];
+                    CKXMLDocument *bodyElement = [bodyElements objectAtIndex:0];
                     
                     CKDebug(@"[+] received message: %@; from: %@", bodyElement.content, contactBareJid);
                     
                     if (contact == nil) {
                         contact = [[CKContact alloc] initWithJabberIdentifier:contactBareJid
-                                                               andDisplayName:contactBareJid
-                                                               andPhoneNumber:nil
-                                                              andContactState:ContactStateOnline];
+                            andDisplayName:contactBareJid andPhoneNumber:nil
+                            andContactState:ContactStateOnline];
                         [[CKContactList sharedInstance] addContact:contact];
                     }
                     CKMessage *message = [[CKMessage alloc] initWithContact:contact
@@ -578,7 +544,7 @@ didStartElement:(NSString *)elementName
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError
 {
-    CKDebug(@"[-] Error %ld, Description: %@, Line: %ld, Column: %ld", 
+    CKDebug(@"[-] SAX Error %ld, Description: %@, Line: %ld, Column: %ld", 
             [parseError code], [parseError localizedDescription], 
             [parser lineNumber], [parser columnNumber]);
 }
