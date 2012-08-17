@@ -10,12 +10,6 @@
 
 @implementation CKMessage
 
-
-@synthesize contact         = _contact;
-@synthesize text            = _text;
-@synthesize timestamp       = _timestamp;
-@synthesize timestampString = _timestampString;
-
 - (id)initWithContact:(CKContact *)contact
 {
     return [self initWithContact:contact timestamp:nil messageText:nil];
@@ -53,9 +47,6 @@
 
 - (BOOL)isEqualToMessage:(CKMessage *)object
 {
-    if (object == self) {
-        return YES;
-    }
     if (![self.timestampString isEqualToString:object.timestampString] || 
         ![self.text isEqualToString:object.text] ||
         ![self.contact.displayName isEqualToString:object.contact.displayName]) {

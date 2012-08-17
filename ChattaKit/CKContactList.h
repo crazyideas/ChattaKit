@@ -6,7 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CKContact.h"
+
+@class CKContact;
+@class CKMessage;
 
 @protocol CKContactListDelegate <NSObject>
 @optional

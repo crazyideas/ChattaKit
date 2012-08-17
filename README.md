@@ -12,8 +12,9 @@ ChattaKit is an Objective-C library that enables OS X and iOS Apps to send and r
 * Dependences
 
  * libxml2
+ * libtidy
 
-* Build Instructions 
+* Build Instructions
 
  1. Create new directory where you will be storing your project based off `ChattaKit`. Open Terminal and type: `mkdir $HOME/projects/ck_project`
 

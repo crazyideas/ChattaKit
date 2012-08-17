@@ -11,21 +11,12 @@
 #import "CKContactList.h"
 #import "CKTimeService.h"
 #import "CKXMLDocument.h"
-#import "ChattaKit.h"
 #import "CKMessage.h"
 #import "CKContact.h"
+#import "CKRoster.h"
+#import "CKRosterItem.h"
 
 @implementation CKInstantMessageService
-
-@synthesize username             = _username;
-@synthesize password             = _password;
-@synthesize fullJabberIdentifier = _fullJabberIdentifier;
-@synthesize infoQueryIdentifier  = _infoQueryIdentifier;
-@synthesize streamNamespace      = _streamNamespace;
-@synthesize streamState          = _streamState;
-@synthesize chattaKit            = _chattaKit;
-@synthesize signedIn             = _signedIn;
-
 
 - (id)init
 {
@@ -176,7 +167,9 @@
     }
     
     // notify chattakit that we are disconnected
-    [self.chattaKit connectionNotificationFrom:self withState:NO];
+    if (self.delegate != nil) {
+        [self.delegate connectionStateNotificationFrom:self connected:NO];
+    }
     
     // block to execute
     dispatch_block_t dispatch_block = ^(void)
@@ -345,7 +338,9 @@
             [self writeRawBytes:stanza toStream:outputStream];
             self.streamState = kStateConnected;
             self.signedIn = YES;
-            [self.chattaKit connectionNotificationFrom:self withState:YES];
+            if (self.delegate != nil) {
+                [self.delegate connectionStateNotificationFrom:self connected:YES];
+            }
             
             CKDebug(@"[+] connection to instant service established");
             break;

@@ -6,10 +6,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CKContact.h"
-#import "CKRoster.h"
-#import "CKRosterItem.h"
-#import "ChattaKit.h"
+
+@class CKContact;
+@class CKRoster;
+@class CKRosterItem;
+
+@protocol CKInstantMessageDelegate <NSObject>
+@optional
+- (void)connectionStateNotificationFrom:(id)sender connected:(BOOL)connected;
+@end
+
 
 @interface CKInstantMessageService : NSObject <NSStreamDelegate, NSXMLParserDelegate>
 {
@@ -30,13 +36,13 @@
     NSTimer *serverPingTimer;
 }
 
-@property (strong, nonatomic) ChattaKit *chattaKit;
 @property (strong, nonatomic) NSString *username;
 @property (strong, nonatomic) NSString *password;
 @property (strong, nonatomic) NSString *fullJabberIdentifier;
 @property (strong, nonatomic) NSString *infoQueryIdentifier;
 @property (strong, nonatomic) NSString *streamNamespace;
 @property (strong, nonatomic) CKRoster *xmppRoster;
+@property (nonatomic, assign) id <CKInstantMessageDelegate> delegate;
 @property (nonatomic) ServiceStreamState streamState;
 @property (nonatomic) BOOL signedIn;
 

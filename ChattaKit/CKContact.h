@@ -9,12 +9,6 @@
 
 @class CKMessage;
 
-typedef enum {
-    ContactStateOnline,
-    ContactStateOffline,
-    ContactStateIndeterminate
-} ContactState;
-
 @interface CKContact : NSObject <NSCoding>
 {
     NSMutableArray *m_messages;

@@ -11,13 +11,14 @@ typedef void(^timerBlock_t)(void);
 
 @interface CKTimer : NSObject
 {
+    dispatch_queue_t dispatch_queue;
     dispatch_source_t timer;
 }
 
-- (id)initWithDispatchTime:(NSTimeInterval)dispatchTime 
-                  interval:(NSTimeInterval)interval 
-                     queue:(dispatch_queue_t)queue
+- (id)initWithDispatchTime:(NSTimeInterval)dispatchTime interval:(NSTimeInterval)interval
                      block:(timerBlock_t)block;
+- (id)initWithDispatchTime:(NSTimeInterval)dispatchTime interval:(NSTimeInterval)interval
+                     queue:(dispatch_queue_t)queue block:(timerBlock_t)block;
 - (void)invalidate;
 
 @end

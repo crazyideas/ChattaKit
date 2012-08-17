@@ -55,5 +55,16 @@ typedef enum {
     kInvalidElementType
 } XMLElementType;
 
+typedef enum {
+    ContactStateOnline,
+    ContactStateOffline,
+    ContactStateIndeterminate
+} ContactState;
+
+typedef enum {
+    ChattaStateConnected = 0,
+    ChattaStateDisconnected
+} ChattaState;
+
 @end
 

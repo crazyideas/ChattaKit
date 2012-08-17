@@ -12,6 +12,7 @@
 #import "CKXMLDocument.h"
 #import "CKContact.h"
 #import "CKMessage.h"
+#import "CKTimer.h"
 
 
 @interface CKTextMessageService (PrivateMethods)
@@ -19,7 +20,6 @@
 - (NSString *)timezoneRequest;
 - (NSString *)sendKeyRequest;
 - (NSString *)refreshKeyRequest;
-- (NSString *)contactsRequest;
 
 - (void)startFetchUnreadMessagesTimer;
 - (void)stopFetchUnreadMessagesTimer;
@@ -43,28 +43,32 @@
 
 - (void)loginToServiceWithUsername:(NSString *)username password:(NSString *)password
 {
+    __block CKTextMessageService *block_self = self;
+
     dispatch_async(dispatch_queue, ^(void) {
-        __weak CKTextMessageService *weak_self = self;
         
         NSString *requestBody = [NSString stringWithFormat:
                                  @"accountType=%@&Email=%@&Passwd=%@&service="
                                  @"grandcentral&source=crazyideas-chatta-0.1",
                                  @"GOOGLE", username, password];
         
-        NSString *requestResult = [weak_self rawHttpRequest:@"POST" 
-                                                      onURL:SERVICE_CLIENT_LOGIN_URL 
-                                                   withBody:requestBody];
+        NSString *requestResult = [block_self rawHttpRequest:@"POST" 
+            onURL:SERVICE_CLIENT_LOGIN_URL withBody:requestBody];
         
         if (requestResult == nil) {
             CKDebug(@"[-] (login, text service) rawHttpRequest failed");
-            [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
+            if (block_self.delegate != nil) {
+                [block_self.delegate connectionStateNotificationFrom:block_self connected:NO];
+            }
             return;
         }
         
         for (NSString *errorCode in [CKConstants serviceErrorCodes]) {
             if ([requestResult rangeOfString:errorCode].location != NSNotFound) {
                 CKDebug(@"[-] connection failed due to code: %@", errorCode);
-                [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
+                if (block_self.delegate != nil) {
+                    [block_self.delegate connectionStateNotificationFrom:block_self connected:NO];
+                }
                 return;
             }
         }
@@ -83,17 +87,21 @@
         }
         
         // set authorizationToken
-        weak_self.textAuthToken = [NSString stringWithString:[tokens objectForKey:@"Auth"]];
-        if (weak_self.textAuthToken == nil) {
+        block_self.textAuthToken = [NSString stringWithString:[tokens objectForKey:@"Auth"]];
+        if (block_self.textAuthToken == nil) {
             CKDebug(@"[-] connection failed, authorizationToken is nil");
-            [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
+            if (block_self.delegate != nil) {
+                [block_self.delegate connectionStateNotificationFrom:block_self connected:NO];
+            }
             return;
         }
         
         // fetch account keys (_rnr_se, r, and timezone)
-        if ([weak_self fetchAccountKeys] == NO) {
+        if ([block_self fetchAccountKeys] == NO) {
             CKDebug(@"[-] connection failed, account keys not fetched");
-            [weak_self.chattaKit connectionNotificationFrom:self withState:NO];
+            if (block_self.delegate != nil) {
+                [block_self.delegate connectionStateNotificationFrom:block_self connected:NO];
+            }
             return;
         }
         
@@ -102,10 +110,12 @@
 
         // setup time service
         CKTimeService *timeService = [CKTimeService sharedInstance];
-        [timeService setServiceTimeZone:self.accountTimezone];
+        [timeService setServiceTimeZone:block_self.accountTimezone];
         
-        [weak_self startFetchUnreadMessagesTimer];
-        [weak_self.chattaKit connectionNotificationFrom:self withState:YES];
+        [block_self startFetchUnreadMessagesTimer];
+        if (block_self.delegate != nil) {
+            [block_self.delegate connectionStateNotificationFrom:block_self connected:YES];
+        }
     });
 }
 
@@ -117,19 +127,22 @@
     self.accountRefreshKey = nil;
     
     [self stopFetchUnreadMessagesTimer];
-    [self.chattaKit connectionNotificationFrom:self withState:NO];
+    if (self.delegate != nil) {
+        [self.delegate connectionStateNotificationFrom:self connected:NO];
+    }
 }
 
 - (void)sendMessage:(NSString *)message toContact:(CKContact *)contact
 {
+    __block CKTextMessageService *block_self = self;
+
     dispatch_async(dispatch_queue, ^(void) {
-        __weak CKTextMessageService *weak_self = self;
 
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDate *now = [NSDate date];
         
         // check if authorizationToken has value
-        if (weak_self.textAuthToken == nil) {
+        if (block_self.textAuthToken == nil) {
             return;
         }
         
@@ -148,15 +161,14 @@
         
         NSString *phoneNumberEncoded = [contact.phoneNumber stringWithUrlEncoding];
         NSString *messageTextEncoded = [message stringWithUrlEncoding];
-        NSString *sendKeyTextEncoded = [weak_self.accountSendKey stringWithUrlEncoding];
+        NSString *sendKeyTextEncoded = [block_self.accountSendKey stringWithUrlEncoding];
         
         // create bytes of http post body
         NSString *requestBody = [NSString stringWithFormat:@"phoneNumber=%@&text=%@&_rnr_se=%@", 
                                  phoneNumberEncoded, messageTextEncoded, sendKeyTextEncoded];
 
-        NSString *requestResult = [weak_self rawHttpRequest:@"POST" 
-                                                      onURL:SERVICE_SEND_URL 
-                                                   withBody:requestBody];
+        NSString *requestResult = [block_self rawHttpRequest:@"POST" 
+            onURL:SERVICE_SEND_URL withBody:requestBody];
         
         if (requestResult == nil) {
             CKDebug(@"[-] rawHttpRequest failed");
@@ -170,11 +182,6 @@
             [[CKContactList sharedInstance] newMessage:newMessage forContact:contact];
         }
     });
-}
-
-- (NSString *)requestServiceContactList
-{
-    return [self contactsRequest];
 }
 
 - (void)dealloc
@@ -356,7 +363,9 @@
     NSSortDescriptor *sortDesc = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
     NSArray *diffArray = [diffSet sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
     for (CKMessage *diffMessage in diffArray) {
-        CKDebug(@"[+] received message: %@; from: %@", diffMessage.text, diffMessage.contact.phoneNumber);
+        NSString *fromDisplay = (diffMessage.contact.phoneNumber) ?
+            diffMessage.contact.phoneNumber : diffMessage.contact.displayName;
+        CKDebug(@"[+] received message: %@; from: %@", diffMessage.text, fromDisplay);
         [[CKContactList sharedInstance] newMessage:diffMessage forContact:contact];
     }
 }
@@ -474,10 +483,13 @@
     // is just as likley to break with any changes as this method is
     NSRange range1 = [requestResult rangeOfString:@"timezone\":\""];
     NSRange range2 = [requestResult rangeOfString:@"\",\"doNotDisturb"];
+    if (range1.location == NSNotFound || range2.location == NSNotFound) {
+        return nil;
+    }
+    
     NSUInteger length = range2.location - range1.location - range1.length;
     NSUInteger location = range1.location + range1.length;
     NSRange tzRange = NSMakeRange(location, length);
-    
     return [requestResult substringWithRange:tzRange];
 }
 
@@ -532,74 +544,80 @@
     // the correct way to extract the timezone
     NSRange range1 = [requestResult rangeOfString:@"_cd(\'"];
     NSRange range2 = [requestResult rangeOfString:@"\', null"];
+    if (range1.location == NSNotFound || range2.location == NSNotFound) {
+        return nil;
+    }
+    
     NSUInteger length = range2.location - range1.location - range1.length;
     NSUInteger location = range1.location + range1.length;
     NSRange refreshKeyRange = NSMakeRange(location, length);
-    
     return [requestResult substringWithRange:refreshKeyRange];
-}
-
-- (NSString *)contactsRequest
-{
-    if (self.textAuthToken == nil) {
-        return nil;
-    }
-    
-    NSString *requestResult = [self rawHttpRequest:@"GET" onURL:SERVICE_CONTACTS_REQ_URL withBody:nil];
-    if (requestResult == nil) {
-        return nil;
-    }
-    
-    return requestResult;
 }
 
 - (void)startFetchUnreadMessagesTimer
 {
+    __block CKTextMessageService *block_self = self;
+
     timerBlock_t fetchUnreadMessages = ^(void) {
         CKDebug(@"[+] fetching unread messages");
 
-        __weak CKTextMessageService *weak_self = self;
 
-        if (weak_self.textAuthToken == nil) {
+        if (block_self.textAuthToken == nil) {
             CKDebug(@"[-] fetch failed, no auth token");
             return;
         }
         
-        NSString *requestResult = [weak_self rawHttpRequest:@"GET" 
-                                                      onURL:SERVICE_UNREAD_INBOX_URL 
-                                                   withBody:nil];
+        NSString *requestResult = [block_self rawHttpRequest:@"GET" 
+            onURL:SERVICE_UNREAD_INBOX_URL withBody:nil];
         if (requestResult == nil) {
             CKDebug(@"[-] rawHttpRequest result failed in fetch undread, logging out");
-            [weak_self.chattaKit logoutOfService];
+            if (self.delegate != nil) {
+                [self.delegate connectionStateNotificationFrom:block_self connected:NO];
+            }
             return;
         }
     
         NSRange jsonRange1 = [requestResult rangeOfString:@"<json><![CDATA["];
         NSRange jsonRange2 = [requestResult rangeOfString:@"]]></json>"];
+        if (jsonRange1.location == NSNotFound || jsonRange2.location == NSNotFound) {
+            CKDebug(@"[-] rawHttpRequest result failed in to find json cdata");
+            if (self.delegate != nil) {
+                [self.delegate connectionStateNotificationFrom:block_self connected:NO];
+            }
+            return;
+        }
         NSUInteger jsonLength = jsonRange2.location - jsonRange1.location - jsonRange1.length;
         NSUInteger jsonLocation = jsonRange1.location + jsonRange1.length;
         NSRange jsonRange = NSMakeRange(jsonLocation, jsonLength);
         NSData *jsonData = [[requestResult substringWithRange:jsonRange] 
                             dataUsingEncoding:NSUTF8StringEncoding];
 
+        
         NSRange htmlRange1 = [requestResult rangeOfString:@"<html><![CDATA["];
         NSRange htmlRange2 = [requestResult rangeOfString:@"]]></html>"];
+        if (htmlRange1.location == NSNotFound || htmlRange2.location == NSNotFound) {
+            CKDebug(@"[-] rawHttpRequest result failed in to find html cdata");
+            if (self.delegate != nil) {
+                [self.delegate connectionStateNotificationFrom:block_self connected:NO];
+            }
+            return;
+        }
         NSUInteger htmlLength = htmlRange2.location - htmlRange1.location - htmlRange1.length;
         NSUInteger htmlLocation = htmlRange1.location + htmlRange1.length;
         NSRange htmlRange = NSMakeRange(htmlLocation, htmlLength);
         NSData *htmlData = [[requestResult substringWithRange:htmlRange] 
                             dataUsingEncoding:NSUTF8StringEncoding];
 
-        [weak_self parseMessagesJSON:jsonData andHTML:htmlData];
+        [block_self parseMessagesJSON:jsonData andHTML:htmlData];
     };
     
-    fetchUnreadMessagesTimer = [[CKTimer alloc] initWithDispatchTime:1.0 
+    self.fetchUnreadMessagesTimer = [[CKTimer alloc] initWithDispatchTime:1.0
         interval:30 queue:dispatch_queue block:fetchUnreadMessages];
 }
 
 - (void)stopFetchUnreadMessagesTimer
 {
-    [fetchUnreadMessagesTimer invalidate];
+    [self.fetchUnreadMessagesTimer invalidate];
 }
 
 // check if this method is always called in a queue

@@ -10,10 +10,6 @@
 
 @implementation CKContactList
 
-@synthesize me       = _me;
-@synthesize delegate = _delegate;
-
-
 + (CKContactList *)sharedInstance
 {
     static dispatch_once_t onceToken;
