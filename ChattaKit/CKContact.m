@@ -106,7 +106,15 @@
     });
 }
 
-
+- (void)removeAllMessages
+{
+    dispatch_sync(m_serialDispatchQueue, ^(void) {
+        if (m_messages == nil) {
+            return;
+        }
+        [m_messages removeAllObjects];
+    });
+}
 
 - (BOOL)isEqualToContact:(CKContact *)object
 {

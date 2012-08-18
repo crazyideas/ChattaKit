@@ -80,7 +80,9 @@
 
 - (NSString *)stringByRemovingWhitespaceNewlineChars
 {
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSCharacterSet *whitespaceNewlineCharSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *trimmedString = [self stringByTrimmingCharactersInSet:whitespaceNewlineCharSet];
+    return [trimmedString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
 }
 
 #pragma mark - Class Methods

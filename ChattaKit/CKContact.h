@@ -33,6 +33,7 @@
 
 - (void)addMessage:(CKMessage *)message;
 - (void)replaceMessagesWith:(NSArray *)messages;
+- (void)removeAllMessages;
 - (BOOL)isEqualToContact:(CKContact *)object;
 
 @end
