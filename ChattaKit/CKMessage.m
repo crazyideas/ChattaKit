@@ -47,7 +47,15 @@
 
 - (BOOL)isEqualToMessage:(CKMessage *)object
 {
-    if (![self.timestampString isEqualToString:object.timestampString] || 
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"MM-dd-YYYY";
+    NSString *selfDatetime = [NSString stringWithFormat:@"%@ %@",
+        [dateFormatter stringFromDate:self.timestamp], self.timestampString];
+    NSString *objectDatetime = [NSString stringWithFormat:@"%@ %@",
+        [dateFormatter stringFromDate:object.timestamp], object.timestampString];
+    
+    CKDebug(@"selfDatetime: %@, objectDatetime: %@", selfDatetime, objectDatetime);
+    if (![selfDatetime isEqualToString:objectDatetime] || 
         ![self.text isEqualToString:object.text] ||
         ![self.contact.displayName isEqualToString:object.contact.displayName]) {
         return NO;

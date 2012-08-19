@@ -82,7 +82,10 @@
 {
     NSCharacterSet *whitespaceNewlineCharSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSString *trimmedString = [self stringByTrimmingCharactersInSet:whitespaceNewlineCharSet];
-    return [trimmedString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    trimmedString = [trimmedString stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    trimmedString = [trimmedString stringByReplacingOccurrencesOfString:@" +" withString:@" "
+        options:NSRegularExpressionSearch range:NSMakeRange(0, trimmedString.length)];
+    return trimmedString;
 }
 
 #pragma mark - Class Methods
