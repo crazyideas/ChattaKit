@@ -167,4 +167,17 @@
     return [message dataUsingEncoding:NSUTF8StringEncoding];            
 }
 
++ (NSData *)extendedAttributesQuery:(NSString *)from
+{
+    NSString *message = [[NSString alloc] initWithFormat:
+                         @"<iq type='get' from='%@' id='google-roster-1'>"
+                          "<query xmlns='jabber:iq:roster' xmlns:gr='google:roster' gr:ext='2'/>"
+                          "</iq>", from];
+    
+    //CKDebug(@"Returning Stanza: %@", message);
+    return [message dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+
+
 @end

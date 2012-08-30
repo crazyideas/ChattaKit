@@ -49,7 +49,7 @@
         
         NSString *requestBody = [NSString stringWithFormat:
                                  @"accountType=%@&Email=%@&Passwd=%@&service="
-                                 @"grandcentral&source=crazyideas-chatta-0.1",
+                                 @"grandcentral&source=crazyideas-chatta-0.2",
                                  @"GOOGLE", username, password];
         
         NSString *requestResult = [block_self rawHttpRequest:@"POST" 

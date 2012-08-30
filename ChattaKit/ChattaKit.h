@@ -21,6 +21,7 @@
 @protocol ChattaKitDelegate <NSObject>
 @optional
 - (void)connectionStateNotification:(ChattaState)state;
+- (void)mostContacted:(NSArray *)contacts;
 @end
 
 @interface ChattaKit : NSObject <CKTextMessageDelegate, CKInstantMessageDelegate>
@@ -47,5 +48,6 @@
 - (BOOL)sendMessage:(NSString *)message toContact:(CKContact *)contact;
 - (void)requestContactStatus:(CKContact *)contact;
 - (CKRoster *)requestXmppRoster;
+- (void)requestMostContacted;
 
 @end

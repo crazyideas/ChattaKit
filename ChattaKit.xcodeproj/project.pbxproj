@@ -44,6 +44,9 @@
 		27E3421F15A554B70032098A /* CKTimeService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421B15A554B70032098A /* CKTimeService.m */; };
 		27E3422015A554B70032098A /* CKTextMessageService.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3421C15A554B70032098A /* CKTextMessageService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		27E3422115A554B70032098A /* CKTextMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3421D15A554B70032098A /* CKTextMessageService.m */; };
+		27E3F50B15EFFD640060881A /* CKContactMerger.h in Headers */ = {isa = PBXBuildFile; fileRef = 27E3F50715EFFD640060881A /* CKContactMerger.h */; };
+		27E3F50C15EFFD640060881A /* CKContactMerger.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3F50815EFFD640060881A /* CKContactMerger.m */; };
+		27E3F51015F002F10060881A /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E3F50F15F002F10060881A /* AddressBook.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -90,6 +93,9 @@
 		27E3421B15A554B70032098A /* CKTimeService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTimeService.m; sourceTree = "<group>"; };
 		27E3421C15A554B70032098A /* CKTextMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKTextMessageService.h; sourceTree = "<group>"; };
 		27E3421D15A554B70032098A /* CKTextMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKTextMessageService.m; sourceTree = "<group>"; };
+		27E3F50715EFFD640060881A /* CKContactMerger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactMerger.h; sourceTree = "<group>"; };
+		27E3F50815EFFD640060881A /* CKContactMerger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactMerger.m; sourceTree = "<group>"; };
+		27E3F50F15F002F10060881A /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +106,7 @@
 				27A6483C15DA23D400596713 /* libtidy.dylib in Frameworks */,
 				27B7369D159D759F009EC8DD /* libxml2.dylib in Frameworks */,
 				278A8D9A159D62380086C422 /* Cocoa.framework in Frameworks */,
+				27E3F51015F002F10060881A /* AddressBook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +138,7 @@
 		278A8D8B159D62380086C422 = {
 			isa = PBXGroup;
 			children = (
+				27E3F50F15F002F10060881A /* AddressBook.framework */,
 				27A6483B15DA23D400596713 /* libtidy.dylib */,
 				27B7369C159D759F009EC8DD /* libxml2.dylib */,
 				278A8D9F159D62380086C422 /* ChattaKit */,
@@ -222,6 +230,7 @@
 		27B73699159D731E009EC8DD /* MessagingServices */ = {
 			isa = PBXGroup;
 			children = (
+				27E3F50515EFFD580060881A /* ContactManagement */,
 				27E3421C15A554B70032098A /* CKTextMessageService.h */,
 				27E3421D15A554B70032098A /* CKTextMessageService.m */,
 				27B73671159D7281009EC8DD /* CKInstantMessageService.h */,
@@ -233,6 +242,15 @@
 				27B73678159D7281009EC8DD /* CKStanzaLibrary.m */,
 			);
 			name = MessagingServices;
+			sourceTree = "<group>";
+		};
+		27E3F50515EFFD580060881A /* ContactManagement */ = {
+			isa = PBXGroup;
+			children = (
+				27E3F50715EFFD640060881A /* CKContactMerger.h */,
+				27E3F50815EFFD640060881A /* CKContactMerger.m */,
+			);
+			name = ContactManagement;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,6 +277,7 @@
 				27A6484215DA242500596713 /* CKTidy.h in Headers */,
 				27A6484415DA242500596713 /* CKXMLDocument.h in Headers */,
 				277246C015DCC4F9004B3DFA /* CKTimer.h in Headers */,
+				27E3F50B15EFFD640060881A /* CKContactMerger.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +348,7 @@
 				27A6484315DA242500596713 /* CKTidy.m in Sources */,
 				27A6484515DA242500596713 /* CKXMLDocument.m in Sources */,
 				277246C115DCC4F9004B3DFA /* CKTimer.m in Sources */,
+				27E3F50C15EFFD640060881A /* CKContactMerger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -55,6 +55,13 @@
     }
 }
 
+- (void)removeAllContacts
+{
+    dispatch_sync(m_serialDispatchQueue, ^(void) {
+        [m_contactList removeAllObjects];
+    });
+}
+
 - (void)newMessage:(CKMessage *)message forContact:(CKContact *)contact
 {
     [contact addMessage:message];

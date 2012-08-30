@@ -33,6 +33,7 @@
 
 - (void)addContact:(CKContact *)contact;
 - (void)removeContact:(CKContact *)contact;
+- (void)removeAllContacts;
 - (void)newMessage:(CKMessage *)message forContact:(CKContact *)contact;
 
 - (NSArray *)allContacts;

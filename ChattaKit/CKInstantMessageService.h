@@ -14,6 +14,7 @@
 @protocol CKInstantMessageDelegate <NSObject>
 @optional
 - (void)connectionStateNotificationFrom:(id)sender connected:(BOOL)connected;
+- (void)mostContactedFrom:(id)sender contacts:(NSArray *)contacts;
 @end
 
 
@@ -54,5 +55,6 @@
 
 - (void)sendMessage:(NSString *)message toContact:(CKContact *)contact;
 - (void)sendPresenceProbeTo:(CKContact *)contact;
+- (void)sendExtendedAttributesQuery;
 
 @end

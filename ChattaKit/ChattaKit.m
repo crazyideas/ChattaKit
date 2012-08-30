@@ -66,7 +66,7 @@
     // set a timeout to login
     self.loginCheckTimer = [[CKTimer alloc] initWithDispatchTime:0.0 interval:1.0 block:^(void) {
         dispatch_async(dispatch_get_main_queue(), ^(void) {
-            NSLog(@"[+] loginCheckTimer: %lu", loginElapsedTime);
+            CKDebug(@"[+] loginCheckTimer: %lu", loginElapsedTime);
             if (loginElapsedTime++ > 10) {
                 CKDebug(@"[-] loginCheckTimer invalidating: login time elapsed");
                 [block_self.loginCheckTimer invalidate];
@@ -107,6 +107,11 @@
 - (CKRoster *)requestXmppRoster
 {
     return self.instantMessageService.xmppRoster;
+}
+
+- (void)requestMostContacted
+{
+    [self.instantMessageService sendExtendedAttributesQuery];
 }
 
 #pragma mark Contact Management and Implementation of ChattaKitDelegate
@@ -164,6 +169,13 @@
             }
         }
     });
+}
+
+- (void)mostContactedFrom:(id)sender contacts:(NSArray *)contacts
+{
+    if (self.delegate != nil) {
+        [self.delegate mostContacted:contacts];
+    }
 }
 
 @end

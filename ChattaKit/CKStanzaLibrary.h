@@ -25,5 +25,6 @@
 + (NSData *)presenceProbeFrom:(NSString *)from to:(NSString *)to;
 + (NSData *)presenceType:(NSString *)type to:(NSString *)to;
 + (NSData *)pingFrom:(NSString *)from withId:(NSString *)identifier;
++ (NSData *)extendedAttributesQuery:(NSString *)from;
 
 @end

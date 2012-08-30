@@ -15,6 +15,7 @@
 #import "CKContact.h"
 #import "CKRoster.h"
 #import "CKRosterItem.h"
+#import "CKContactMerger.h"
 
 @implementation CKInstantMessageService
 
@@ -228,6 +229,15 @@
     contact.connectionState = ContactStateOffline;
 }
 
+- (void)sendExtendedAttributesQuery
+{
+    // create message stanza
+    NSData *stanza = [CKStanzaLibrary extendedAttributesQuery:self.fullJabberIdentifier];
+    
+    // send ping
+    [self writeRawBytes:stanza toStream:outputStream];
+}
+
 // selector for server ping keep alive
 - (void)sendServerPing:(NSTimer *)timer
 {
@@ -354,6 +364,17 @@
                     
                     /* ignore ping response iq from server */
                     
+                    /* parse extended attributes */
+                    NSString *queryId = [xmlDocument.attributes objectForKey:@"id"];
+                    if (queryId != nil && [queryId isEqualToString:@"google-roster-1"]) {
+                        CKContactMerger *contactMerger = [[CKContactMerger alloc] init];
+                        if (self.delegate != nil) {
+                            [self.delegate mostContactedFrom:self
+                                contacts:[contactMerger mostContactedFrom:xmlDocument]];
+                        }
+                        break;
+                    }
+                    
                     /* fill in roster with bare jids */
                     NSString *queryNamespace = [query.xmlns objectAtIndex:0];
                     if ([queryNamespace isEqualToString:@"xmlns=\'jabber:iq:roster\'"]) {
@@ -363,6 +384,7 @@
                             rosterItem.online = NO;
                             [self.xmppRoster addRosterItem:rosterItem];
                         }
+                        break;
                     }
                     
                     // disco info response
@@ -375,6 +397,7 @@
                         NSData *stanza = [CKStanzaLibrary
                             infoQueryDiscoveryInfoResponseFrom:self.fullJabberIdentifier andTo:bareFrom];
                         [self writeRawBytes:stanza toStream:outputStream];
+                        break;
                     }
                     break;
                 }
