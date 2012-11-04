@@ -63,7 +63,9 @@ typedef enum {
 
 typedef enum {
     ChattaStateConnected = 0,
-    ChattaStateDisconnected
+    ChattaStateDisconnected,
+    ChattaStateConnecting,
+    ChattaStateErrorDisconnected,
 } ChattaState;
 
 @end

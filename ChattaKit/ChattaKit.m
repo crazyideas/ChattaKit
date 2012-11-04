@@ -47,6 +47,12 @@
         return;
     }
     
+    // update state to connecting
+    if (self.delegate != nil) {
+        self.chattaState = ChattaStateConnecting;
+        [self.delegate connectionStateNotification:ChattaStateConnecting];
+    }
+    
     // if we are not currently connected, that means one login failed and we are trying to 
     // login again, which means we should try and logout of both services before trying again
     if (textServiceConnected == YES || instantServiceConnected == YES) {
@@ -67,11 +73,11 @@
     self.loginCheckTimer = [[CKTimer alloc] initWithDispatchTime:0.0 interval:1.0 block:^(void) {
         dispatch_async(dispatch_get_main_queue(), ^(void) {
             CKDebug(@"[+] loginCheckTimer: %lu", loginElapsedTime);
-            if (loginElapsedTime++ > 10) {
+            if (loginElapsedTime++ > 5) {
                 CKDebug(@"[-] loginCheckTimer invalidating: login time elapsed");
                 [block_self.loginCheckTimer invalidate];
                 if (block_self.delegate != nil) {
-                    [block_self.delegate connectionStateNotification:ChattaStateDisconnected];
+                    [block_self.delegate connectionStateNotification:ChattaStateErrorDisconnected];
                 }
             }
         });
@@ -130,36 +136,44 @@
         CKContactList *contactList = [CKContactList sharedInstance];
         
         // chatta connected
-        if (block_self.chattaState == ChattaStateDisconnected) {
-            if (textServiceConnected && instantServiceConnected) {
-                self.chattaState = ChattaStateConnected;
-                
-                // notify delegate
-                [block_self.loginCheckTimer invalidate];
-                if (block_self.delegate != nil) {
-                    [block_self.delegate connectionStateNotification:ChattaStateConnected];
+        if (block_self.chattaState == ChattaStateDisconnected      ||
+            block_self.chattaState == ChattaStateErrorDisconnected ||
+            block_self.chattaState == ChattaStateConnecting) {
+            
+                if (textServiceConnected && instantServiceConnected) {
+                    self.chattaState = ChattaStateConnected;
+                    
+                    // notify delegate
+                    [block_self.loginCheckTimer invalidate];
+                    if (block_self.delegate != nil) {
+                        [block_self.delegate connectionStateNotification:ChattaStateConnected];
+                    }
+                    
+                    // request presence information from all contacts to update status
+                    for (CKContact *contact in [contactList allContacts]) {
+                        [self requestContactStatus:contact];
+                    }
                 }
-                
-                // request presence information from all contacts to update status
-                for (CKContact *contact in [contactList allContacts]) {
-                    [self requestContactStatus:contact];
-                }
-            }
         }
         
         // chatta disconnected
         if (block_self.chattaState == ChattaStateConnected) {
+
             if (!textServiceConnected || !instantServiceConnected) {
-                self.chattaState = ChattaStateDisconnected;
-                
                 [block_self.textMessageService logoutOfService];
                 [block_self.instantMessageService logoutOfService];
                 
                 // notify delegate
                 [block_self.loginCheckTimer invalidate];
                 if (block_self.delegate != nil) {
+                    if (block_self.chattaState == ChattaStateConnecting) {
+                        [block_self.delegate connectionStateNotification:ChattaStateErrorDisconnected];
+                    }
                     [block_self.delegate connectionStateNotification:ChattaStateDisconnected];
                 }
+                
+                // update state to disconnected
+                self.chattaState = ChattaStateDisconnected;
                 
                 // update all contacts to indeterminate since we are
                 // not longer connected to either service
