@@ -75,7 +75,10 @@
 
 - (NSString *)stringWithUrlEncoding
 {
-    return [self stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+    return (NSString *)CFBridgingRelease(
+        CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL,
+        (CFStringRef)@"!*'();:@&amp;=+$,/?%#[]", kCFStringEncodingUTF8)
+    );
 }
 
 - (NSString *)stringByRemovingWhitespaceNewlineChars
