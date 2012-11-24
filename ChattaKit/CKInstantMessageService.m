@@ -462,8 +462,9 @@
                     
                     // extract body
                     CKXMLDocument *bodyElement = [bodyElements objectAtIndex:0];
-                    
-                    CKDebug(@"[+] received message: %@; from: %@", bodyElement.content, contactBareJid);
+                    NSString *messageText = [bodyElement.content stringByRemovingWhitespaceNewlineChars];
+
+                    CKDebug(@"[+] received message: %@; from: %@", messageText, contactBareJid);
                     
                     if (contact == nil) {
                         contact = [[CKContact alloc] initWithJabberIdentifier:contactBareJid
@@ -472,7 +473,7 @@
                         [[CKContactList sharedInstance] addContact:contact];
                     }
                     CKMessage *message = [[CKMessage alloc] initWithContact:contact
-                        timestamp:[NSDate date] messageText:bodyElement.content];
+                        timestamp:[NSDate date] messageText:messageText];
                     [[CKContactList sharedInstance] newMessage:message forContact:contact];
                    
                     break;
