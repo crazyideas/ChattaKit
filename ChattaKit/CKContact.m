@@ -154,6 +154,40 @@
     return self;
 }
 
+#pragma mark Implementation for NSPasteboardWriting, NSPasteboardReading protocol
+
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard
+{
+    return [self.displayName writableTypesForPasteboard:pasteboard];
+}
+
+- (id)pasteboardPropertyListForType:(NSString *)type
+{
+    return [self.displayName pasteboardPropertyListForType:type];
+}
+
++ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard
+{
+    return [NSArray arrayWithObjects:(NSString *)kUTTypeText, nil];
+}
+
+- (id)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type
+{
+    self = [self init];
+    if (self) {
+        NSString *displayName = [[NSString alloc] initWithPasteboardPropertyList:propertyList ofType:type];
+        
+        CKContactList *contactList = [CKContactList sharedInstance];
+        CKContact *contact = [contactList contactWithName:displayName];
+        
+        if (contact != nil) {
+            self = contact;
+        }
+    }
+    
+    return self;
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"displayName: %@, jid: %@, phoneNumber: %@, messages: %zu, "

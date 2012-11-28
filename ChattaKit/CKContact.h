@@ -9,7 +9,7 @@
 
 @class CKMessage;
 
-@interface CKContact : NSObject <NSCoding>
+@interface CKContact : NSObject <NSCoding, NSPasteboardWriting, NSPasteboardReading>
 {
     NSMutableArray *m_messages;
     dispatch_queue_t m_serialDispatchQueue;

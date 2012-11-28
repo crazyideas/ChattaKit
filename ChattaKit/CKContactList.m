@@ -203,13 +203,12 @@
     }
     
     dispatch_sync(m_serialDispatchQueue, ^(void) {
-        [[self allContacts] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            CKContact *blkContact = obj;
-            if ([blkContact isEqualToContact:contact]) {
-                contactIndex = idx;
-                *stop = YES;
+        for (int i = 0; i < m_contactList.count; i++) {
+            if ([m_contactList[i] isEqualToContact:contact]) {
+                contactIndex = i;
+                break;
             }
-        }];
+        }
     });
     
     return contactIndex;
@@ -228,6 +227,17 @@
     });
     
     return foundContact;
+}
+
+- (void)swapContactsFrom:(NSInteger)sourceIndex to:(NSInteger)destinationIndex
+{
+    dispatch_sync(m_serialDispatchQueue, ^(void) {
+        NSMutableArray *t = [NSMutableArray arrayWithArray:m_contactList];
+        id object = [t objectAtIndex:sourceIndex];
+        [t removeObjectAtIndex:sourceIndex];
+        [t insertObject:object atIndex:destinationIndex];
+        m_contactList = [t copy];
+    });
 }
 
 #pragma mark - Debugging

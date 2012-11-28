@@ -49,5 +49,6 @@
 - (NSInteger)indexOfContact:(CKContact *)contact;
 
 - (BOOL)containsContact:(CKContact *)contact;
+- (void)swapContactsFrom:(NSInteger)sourceIndex to:(NSInteger)destinationIndex;
 
 @end
